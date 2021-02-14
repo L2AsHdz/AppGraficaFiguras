@@ -1,14 +1,14 @@
 package analizador;
 
 parser code {:
-       @Override
+       /*@Override
         public void syntax_error(Symbol st) {
         	Token token = (Token) st.value;
             report_error("Error Sintactico con el  Token:"+ token.getLexeme()+" este no pertenece a la estructura - linea: "+token.getLine()+" - columna: "+token.getColumn() + "\n",null);
 
             System.out.println("Error Sintactico con el Token: " + token.getLexeme() + " este no pertenece a la estructura - linea: " + token.getLine() + ", columna: " + token.getColumn());
                     errorsList.add(String.format("Error Sintactico con el Token: '%s' este no pertenece a la estructura- linea: %d  columna: %d. Corrige e intenta de nuevo.", token.getLexeme(), token.getLine(), token.getColumn()));
-       }
+       }*/
 :}
 
 /*Terminales y no terminales*/
@@ -18,7 +18,8 @@ terminal Token      NEGRO, AZUL, ROJO, VERDE, AMARILLO, NARANJA, MORADO, CAFE;
 terminal Token      SUMA, RESTA, MULT, DIV, PA, PC, COMA;
 terminal Token      NUMERO;
 
-non terminal        whatever, nose, animate, graph, figura, param_s, param_c, param_r, param_l, param_p, color, tipoA;
+non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color;
+non terminal String whatever, animate, tipoA;
 non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados, expr;
 
 //Precedencias
@@ -32,24 +33,24 @@ nose ::= graph
        ;
 
 graph ::= GRAFICAR figura
-        | GRAFICAR figura whatever
+        | GRAFICAR figura:f whatever {:System.out.println("Se realizaran las animaciones anteriores en " + f + "\n");:}
         ;
 
-whatever ::= animate
-           | animate whatever
+whatever ::= animate:a              {:System.out.println((String)a);:}
+           | animate:a whatever     {:System.out.println((String)a);:}
            ;
 
-animate ::= ANIMAR OBJETO ANTERIOR PA posx COMA posy COMA tipoA PC;
+animate ::= ANIMAR OBJETO ANTERIOR PA posx COMA posy COMA tipoA:ta PC {:RESULT = ta;:};
 
-tipoA ::= LINEA
-        | CURVA
+tipoA ::= LINEA:l      {:RESULT = l.getLexema();:}
+        | CURVA:c      {:RESULT = c.getLexema();:}
         ;
 
-figura ::= CUADRADO PA param_s PC
-         | CIRCULO PA param_c PC
-         | RECTANGULO PA param_r PC
-         | LINEA PA param_l PC
-         | POLIGONO PA param_p PC
+figura ::= CUADRADO:f PA param_s PC         {:RESULT = f.getLexema();:}
+         | CIRCULO:f PA param_c PC          {:RESULT = f.getLexema();:}
+         | RECTANGULO:f PA param_r PC       {:RESULT = f.getLexema();:}
+         | LINEA:f PA param_l PC            {:RESULT = f.getLexema();:}
+         | POLIGONO:f PA param_p PC         {:RESULT = f.getLexema();:}
          ;
 
 param_s ::= posx:x COMA posy:y COMA lado:l COMA color:c

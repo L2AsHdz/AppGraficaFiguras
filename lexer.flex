@@ -34,14 +34,14 @@ NUMERO = 0|([1-9][0-9]*)(\.(0|([0-9]*[1-9])))?
 <YYINITIAL> "animar"                {return symbol(ANIMAR);}
 <YYINITIAL> "objeto"                {return symbol(OBJETO);}
 <YYINITIAL> "anterior"              {return symbol(ANTERIOR);}
-<YYINITIAL> "curva"                 {return symbol(CURVA);}
+<YYINITIAL> "curva"                 {return symbol(CURVA, yytext());}
 
 //Figuras
-<YYINITIAL> "circulo"               {return symbol(CIRCULO);}
-<YYINITIAL> "cuadrado"              {return symbol(CUADRADO);}
-<YYINITIAL> "rectangulo"            {return symbol(RECTANGULO);}
-<YYINITIAL> "linea"                 {return symbol(LINEA);}
-<YYINITIAL> "poligono"              {return symbol(POLIGONO);}
+<YYINITIAL> "circulo"               {return symbol(CIRCULO, yytext());}
+<YYINITIAL> "cuadrado"              {return symbol(CUADRADO, yytext());}
+<YYINITIAL> "rectangulo"            {return symbol(RECTANGULO, yytext());}
+<YYINITIAL> "linea"                 {return symbol(LINEA, yytext());}
+<YYINITIAL> "poligono"              {return symbol(POLIGONO, yytext());}
 
 //Colores
 <YYINITIAL> "negro"                 {return symbol(NEGRO, yytext());}
