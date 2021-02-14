@@ -1,0 +1,120 @@
+package analizador;
+
+parser code {:
+       @Override
+        public void syntax_error(Symbol st) {
+        	Token token = (Token) st.value;
+            report_error("Error Sintactico con el  Token:"+ token.getLexeme()+" este no pertenece a la estructura - linea: "+token.getLine()+" - columna: "+token.getColumn() + "\n",null);
+
+            System.out.println("Error Sintactico con el Token: " + token.getLexeme() + " este no pertenece a la estructura - linea: " + token.getLine() + ", columna: " + token.getColumn());
+                    errorsList.add(String.format("Error Sintactico con el Token: '%s' este no pertenece a la estructura- linea: %d  columna: %d. Corrige e intenta de nuevo.", token.getLexeme(), token.getLine(), token.getColumn()));
+       }
+:}
+
+/*Terminales y no terminales*/
+terminal Token      GRAFICAR, ANIMAR, OBJETO, ANTERIOR, CURVA;
+terminal Token      CIRCULO, CUADRADO, RECTANGULO, LINEA, POLIGONO;
+terminal Token      NEGRO, AZUL, ROJO, VERDE, AMARILLO, NARANJA, MORADO, CAFE;
+terminal Token      SUMA, RESTA, MULT, DIV, PA, PC, COMA;
+terminal Token      NUMERO;
+
+non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color;
+non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados;
+non terminal Float  expr, end;
+
+//Precedencias
+precedence left SUMA, RESTA;
+precedence left MULT, DIV;
+
+/*Gramatica*/
+
+nose ::= graph
+       | graph nose;
+
+graph ::= GRAFICAR figura;
+
+figura ::= CUADRADO PA param_s PC
+         | CIRCULO PA param_c PC
+         | RECTANGULO PA param_r PC
+         | LINEA PA param_l PC
+         | POLIGONO PA param_p PC
+         ;
+
+param_s ::= posx:x COMA posy:y COMA lado:l COMA color:c
+            {:
+                System.out.println("\nGraficando cuadrado color " + c);
+                System.out.println("posx: "+ x + " - posy: " + y + " - lado: " + l);
+            :}
+            ;
+
+param_c ::= posx:x COMA posy:y COMA radio:r COMA color:c
+            {:
+                System.out.println("\nGraficando circulo color " + c);
+                System.out.println("posx: "+ x + " - posy: " + y + " - radio: " + r);
+            :}
+            ;
+
+param_r ::= posx:x COMA posy:y COMA alto:h COMA ancho:w COMA color:c
+            {:
+                System.out.println("\nGraficando rectangulo color " + c);
+                System.out.println("posx: "+ x + " - posy: " + y + " - altura: " + h + " - ancho: " + w);
+            :}
+            ;
+
+param_l ::= posx:x COMA posy:y COMA posx:x2 COMA posy:y2 COMA color:c
+            {:
+                System.out.println("\nGraficando linea color " + c);
+                System.out.println("posx: "+ x + " - posy: " + y + "posx2: "+ x2 + " - posy2: " + y2);
+            :}
+            ;
+
+param_p ::= posx:x COMA posy:y COMA alto:h COMA ancho:w COMA cant_lados:cl COMA color:c
+            {:
+                System.out.println("\nGraficando poligono color " + c);
+                System.out.println("posx: "+ x + " - posy: " + y + " - alto: " + h + " - ancho: " + w + " - cant lados: " + cl);
+            :}
+            ;
+
+posx ::= expr:n        {:RESULT = n;:}
+       ;
+
+posy ::= expr:n        {:RESULT = n;:}
+       ;
+
+lado ::= expr:n        {:RESULT = n;:}
+       ;
+
+radio ::= expr:n        {:RESULT = n;:}
+        ;
+
+alto ::= expr:n        {:RESULT = n;:}
+       ;
+
+ancho ::= expr:n        {:RESULT = n;:}
+       ;
+
+cant_lados ::= expr:n        {:RESULT = n;:}
+             ;
+       
+color ::= NEGRO:c      {:RESULT = c.getLexema();:}
+        | AZUL:c       {:RESULT = c.getLexema();:}
+        | ROJO:c       {:RESULT = c.getLexema();:}
+        | VERDE:c      {:RESULT = c.getLexema();:}
+        | AMARILLO:c   {:RESULT = c.getLexema();:}
+        | NARANJA:c    {:RESULT = c.getLexema();:}
+        | MORADO:c     {:RESULT = c.getLexema();:}
+        | CAFE:c       {:RESULT = c.getLexema();:}
+        ;
+
+expr ::= expr:e1 SUMA expr:e2          {:RESULT = e1 + e2;:}
+       | expr:e1 RESTA expr:e2         {:RESULT = e1 - e2;:}
+       | expr:e1 MULT expr:e2          {:RESULT = e1 * e2;:}
+       | expr:e1 DIV expr:e2           {:RESULT = e1 / e2;:}
+       | PA expr:e PC                  {:RESULT = e;:}
+       | PA expr:e1 PC SUMA expr:e2    {:RESULT = e1 + e2;:} 
+       | PA expr:e1 PC RESTA expr:e2   {:RESULT = e1 - e2;:} 
+       | PA expr:e1 PC MULT expr:e2    {:RESULT = e1 * e2;:} 
+       | PA expr:e1 PC DIV expr:e2     {:RESULT = e1 / e2;:} 
+       | NUMERO:n                      {:RESULT = n.getNumero();:}
+       | error GRAFICAR
+       ;
