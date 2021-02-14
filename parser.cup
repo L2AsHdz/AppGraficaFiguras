@@ -18,9 +18,8 @@ terminal Token      NEGRO, AZUL, ROJO, VERDE, AMARILLO, NARANJA, MORADO, CAFE;
 terminal Token      SUMA, RESTA, MULT, DIV, PA, PC, COMA;
 terminal Token      NUMERO;
 
-non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color;
-non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados;
-non terminal Float  expr, end;
+non terminal        whatever, nose, animate, graph, figura, param_s, param_c, param_r, param_l, param_p, color, tipoA;
+non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados, expr;
 
 //Precedencias
 precedence left SUMA, RESTA;
@@ -29,9 +28,22 @@ precedence left MULT, DIV;
 /*Gramatica*/
 
 nose ::= graph
-       | graph nose;
+       | graph nose
+       ;
 
-graph ::= GRAFICAR figura;
+graph ::= GRAFICAR figura
+        | GRAFICAR figura whatever
+        ;
+
+whatever ::= animate
+           | animate whatever
+           ;
+
+animate ::= ANIMAR OBJETO ANTERIOR PA posx COMA posy COMA tipoA PC;
+
+tipoA ::= LINEA
+        | CURVA
+        ;
 
 figura ::= CUADRADO PA param_s PC
          | CIRCULO PA param_c PC
