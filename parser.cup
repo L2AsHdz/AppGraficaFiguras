@@ -21,7 +21,7 @@ terminal Token      SUMA, RESTA, MULT, DIV, PA, PC, COMA;
 terminal Token      NUMERO;
 
 non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color;
-non terminal Token  whatever, animate, tipoA;
+non terminal Token  animate, tipoA;
 non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados, expr;
 
 //Precedencias
@@ -35,13 +35,9 @@ nose ::= graph
        ;
 
 graph ::= GRAFICAR figura
-        | GRAFICAR figura:f whatever {:System.out.println("Se realizaran las animaciones anteriores en " + f + "\n");:}
+        | GRAFICAR figura:f animate:a
         | error PC      {:System.out.println("Error, estructura incorrecta");:}
         ;
-
-whatever ::= animate:a              {:System.out.println(a.getName());:}
-           | animate:a whatever     {:System.out.println(a.getName());:}
-           ;
 
 animate ::= ANIMAR OBJETO ANTERIOR PA posx COMA posy COMA tipoA:ta PC {:RESULT = ta;:};
 
