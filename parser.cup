@@ -1,15 +1,23 @@
 package analizador;
 
 import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import java.util.List;
 
 parser code {:
-       /*protected int error_sync_size(){
-              return 3;
-       }*/
+
+       private List<ErrorAnalisis> errores = new ArrayList();
+
+       public List<ErrorAnalisis> getErrores(){
+              return this.errores;
+       }
 
        public void syntax_error(Symbol s){
               Token t = (Token) s.value;
-              report_error("Error sintactico en tonken: "+t.getName()+", en la linea: "+t.getLinea()+" y columna: "+t.getColumna()+", intentado recuperarse", cur_token);
+              StringBuilder descripcion = new StringBuilder("Se esperaba: ");
+              expected_token_ids().forEach(x -> descripcion.append(symbl_name_from_id(x)).append(" "));
+              //report_error("Error sintactico en tonken: "+t.getName()+", en la linea: "+t.getLinea()+" y columna: "+t.getColumna()+", intentado recuperarse", cur_token);
+              errores.add(new ErrorAnalisis(t.getName(), t.getLinea(), t.getColumna(), TipoError.SINTACTICO, descripcion.toString()));
        }
 :}
 

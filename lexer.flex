@@ -2,6 +2,8 @@ package analizador;
 
 import java_cup.runtime.*;
 import static analizador.sym.*;
+import java.util.ArrayList;
+import java.util.List;
 %%
 
 %class Lexer
@@ -12,6 +14,11 @@ import static analizador.sym.*;
 %column
 
 %{
+    private List<ErrorAnalisis> errores = new ArrayList();
+
+    public List<ErrorAnalisis> getErrores(){
+        return this.errores;
+    }
   
     private Symbol symbol(String name, int type){
         return new Symbol(type, new Token(name, yyline, yycolumn));
@@ -19,6 +26,11 @@ import static analizador.sym.*;
 
     private Symbol symbol(String name, int type, String lexema){
         return new Symbol(type, new Token(name, yyline, yycolumn, lexema));
+    }
+
+    private void addLexicError(){
+        String descripcion = "El simbolo no pertenece al lenguaje";
+        errores.add(new ErrorAnalisis(yytext(), yyline+1, yycolumn+1, TipoError.LEXICO, descripcion));
     }
 
 %}
@@ -68,4 +80,4 @@ NUMERO = 0|([1-9][0-9]*)(\.(0|([0-9]*[1-9])))?
 
 }
 
-[^]                                 {System.out.println("Error encontrado: " + yytext());}
+[^]                                 {addLexicError();}
