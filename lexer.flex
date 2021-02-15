@@ -13,12 +13,12 @@ import static analizador.sym.*;
 
 %{
   
-    private Symbol symbol(int type){
-        return new Symbol(type, new Token(yyline, yycolumn));
+    private Symbol symbol(String name, int type){
+        return new Symbol(type, new Token(name, yyline, yycolumn));
     }
 
-    private Symbol symbol(int type, String value){
-        return new Symbol(type, new Token(yyline, yycolumn, value));
+    private Symbol symbol(String name, int type, String lexema){
+        return new Symbol(type, new Token(name, yyline, yycolumn, lexema));
     }
 
 %}
@@ -30,40 +30,40 @@ NUMERO = 0|([1-9][0-9]*)(\.(0|([0-9]*[1-9])))?
 %%
 
 //Palabras reservadas
-<YYINITIAL> "graficar"              {return symbol(GRAFICAR);}
-<YYINITIAL> "animar"                {return symbol(ANIMAR);}
-<YYINITIAL> "objeto"                {return symbol(OBJETO);}
-<YYINITIAL> "anterior"              {return symbol(ANTERIOR);}
-<YYINITIAL> "curva"                 {return symbol(CURVA, yytext());}
+<YYINITIAL> "graficar"              {return symbol("GRAFICAR", GRAFICAR);}
+<YYINITIAL> "animar"                {return symbol("ANIMAR", ANIMAR);}
+<YYINITIAL> "objeto"                {return symbol("OBJETO", OBJETO);}
+<YYINITIAL> "anterior"              {return symbol("ANTERIOR", ANTERIOR);}
+<YYINITIAL> "curva"                 {return symbol("CURVA", CURVA);}
 
 //Figuras
-<YYINITIAL> "circulo"               {return symbol(CIRCULO, yytext());}
-<YYINITIAL> "cuadrado"              {return symbol(CUADRADO, yytext());}
-<YYINITIAL> "rectangulo"            {return symbol(RECTANGULO, yytext());}
-<YYINITIAL> "linea"                 {return symbol(LINEA, yytext());}
-<YYINITIAL> "poligono"              {return symbol(POLIGONO, yytext());}
+<YYINITIAL> "circulo"               {return symbol("CIRCULO", CIRCULO);}
+<YYINITIAL> "cuadrado"              {return symbol("CUADRADO", CUADRADO);}
+<YYINITIAL> "rectangulo"            {return symbol("RECTANGULO", RECTANGULO);}
+<YYINITIAL> "linea"                 {return symbol("LINEA", LINEA);}
+<YYINITIAL> "poligono"              {return symbol("POLIGONO", POLIGONO);}
 
 //Colores
-<YYINITIAL> "negro"                 {return symbol(NEGRO, yytext());}
-<YYINITIAL> "azul"                  {return symbol(AZUL, yytext());}
-<YYINITIAL> "rojo"                  {return symbol(ROJO, yytext());}
-<YYINITIAL> "verde"                 {return symbol(VERDE, yytext());}
-<YYINITIAL> "amarillo"              {return symbol(AMARILLO, yytext());}
-<YYINITIAL> "naranja"               {return symbol(NARANJA, yytext());}
-<YYINITIAL> "morado"                {return symbol(MORADO, yytext());}
-<YYINITIAL> "cafe"                  {return symbol(CAFE, yytext());}
+<YYINITIAL> "negro"                 {return symbol("NEGRO", NEGRO);}
+<YYINITIAL> "azul"                  {return symbol("AZUL", AZUL);}
+<YYINITIAL> "rojo"                  {return symbol("ROJO", ROJO);}
+<YYINITIAL> "verde"                 {return symbol("VERDE", VERDE);}
+<YYINITIAL> "amarillo"              {return symbol("AMARILLO", AMARILLO);}
+<YYINITIAL> "naranja"               {return symbol("NARANJA", NARANJA);}
+<YYINITIAL> "morado"                {return symbol("MORADO", MORADO);}
+<YYINITIAL> "cafe"                  {return symbol("CAFE", CAFE);}
 
 <YYINITIAL> {
 
-    "+"                             {return symbol(SUMA);}
-    "-"                             {return symbol(RESTA);}
-    "*"                             {return symbol(MULT);}
-    "/"                             {return symbol(DIV);}
-    "("                             {return symbol(PA);}
-    ")"                             {return symbol(PC);}
-    ","                             {return symbol(COMA);}
+    "+"                             {return symbol("SUMA", SUMA);}
+    "-"                             {return symbol("RESTA", RESTA);}
+    "*"                             {return symbol("MULTIPLICACION", MULT);}
+    "/"                             {return symbol("DIVISION", DIV);}
+    "("                             {return symbol("PAREN_ABRE", PA);}
+    ")"                             {return symbol("PAREN_CIERRE", PC);}
+    ","                             {return symbol("COMA", COMA);}
 
-    {NUMERO}                        {return symbol(NUMERO, yytext());}
+    {NUMERO}                        {return symbol("NUMERO", NUMERO, yytext());}
     {ESPACIO}                       {/*Ignorar*/}
 
 }

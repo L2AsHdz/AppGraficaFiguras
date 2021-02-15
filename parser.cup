@@ -1,7 +1,16 @@
 package analizador;
 
-parser code {:
+import java_cup.runtime.Symbol;
 
+parser code {:
+       /*protected int error_sync_size(){
+              return 3;
+       }*/
+
+       public void syntax_error(Symbol s){
+              Token t = (Token) s.value;
+              report_error("Error sintactico en tonken: "+t.getName()+", en la linea: "+t.getLinea()+" y columna: "+t.getColumna()+", intentado recuperarse", cur_token);
+       }
 :}
 
 /*Terminales y no terminales*/
@@ -27,10 +36,11 @@ nose ::= graph
 
 graph ::= GRAFICAR figura
         | GRAFICAR figura:f whatever {:System.out.println("Se realizaran las animaciones anteriores en " + f + "\n");:}
+        | error PC      {:System.out.println("Error, estructura incorrecta");:}
         ;
 
-whatever ::= animate:a              {:System.out.println(a.getLexema());:}
-           | animate:a whatever     {:System.out.println(a.getLexema());:}
+whatever ::= animate:a              {:System.out.println(a.getName());:}
+           | animate:a whatever     {:System.out.println(a.getName());:}
            ;
 
 animate ::= ANIMAR OBJETO ANTERIOR PA posx COMA posy COMA tipoA:ta PC {:RESULT = ta;:};
@@ -39,11 +49,11 @@ tipoA ::= LINEA:l      {:RESULT = l;:}
         | CURVA:c      {:RESULT = c;:}
         ;
 
-figura ::= CUADRADO:f PA param_s PC         {:RESULT = f.getLexema();:}
-         | CIRCULO:f PA param_c PC          {:RESULT = f.getLexema();:}
-         | RECTANGULO:f PA param_r PC       {:RESULT = f.getLexema();:}
-         | LINEA:f PA param_l PC            {:RESULT = f.getLexema();:}
-         | POLIGONO:f PA param_p PC         {:RESULT = f.getLexema();:}
+figura ::= CUADRADO:f PA param_s PC         {:RESULT = f.getName();:}
+         | CIRCULO:f PA param_c PC          {:RESULT = f.getName();:}
+         | RECTANGULO:f PA param_r PC       {:RESULT = f.getName();:}
+         | LINEA:f PA param_l PC            {:RESULT = f.getName();:}
+         | POLIGONO:f PA param_p PC         {:RESULT = f.getName();:}
          ;
 
 param_s ::= posx:x COMA posy:y COMA lado:l COMA color:c
@@ -102,14 +112,14 @@ ancho ::= expr:n        {:RESULT = n;:}
 cant_lados ::= expr:n        {:RESULT = n;:}
              ;
        
-color ::= NEGRO:c      {:RESULT = c.getLexema();:}
-        | AZUL:c       {:RESULT = c.getLexema();:}
-        | ROJO:c       {:RESULT = c.getLexema();:}
-        | VERDE:c      {:RESULT = c.getLexema();:}
-        | AMARILLO:c   {:RESULT = c.getLexema();:}
-        | NARANJA:c    {:RESULT = c.getLexema();:}
-        | MORADO:c     {:RESULT = c.getLexema();:}
-        | CAFE:c       {:RESULT = c.getLexema();:}
+color ::= NEGRO:c      {:RESULT = c.getName();:}
+        | AZUL:c       {:RESULT = c.getName();:}
+        | ROJO:c       {:RESULT = c.getName();:}
+        | VERDE:c      {:RESULT = c.getName();:}
+        | AMARILLO:c   {:RESULT = c.getName();:}
+        | NARANJA:c    {:RESULT = c.getName();:}
+        | MORADO:c     {:RESULT = c.getName();:}
+        | CAFE:c       {:RESULT = c.getName();:}
         ;
 
 expr ::= expr:e1 SUMA expr:e2          {:RESULT = e1 + e2;:}
@@ -122,5 +132,4 @@ expr ::= expr:e1 SUMA expr:e2          {:RESULT = e1 + e2;:}
        | PA expr:e1 PC MULT expr:e2    {:RESULT = e1 * e2;:} 
        | PA expr:e1 PC DIV expr:e2     {:RESULT = e1 / e2;:} 
        | NUMERO:n                      {:RESULT = n.getNumero();:}
-       | error GRAFICAR
        ;
