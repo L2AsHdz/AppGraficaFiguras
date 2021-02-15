@@ -35,7 +35,7 @@ nose ::= graph
        ;
 
 graph ::= GRAFICAR figura
-        | GRAFICAR figura:f animate:a
+        | GRAFICAR figura:f animate:a {:System.out.println("Animando " + f + " con " + a.getName());:}
         | error PC      {:System.out.println("Error, estructura incorrecta");:}
         ;
 
