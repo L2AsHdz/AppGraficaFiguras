@@ -29,8 +29,8 @@ graph ::= GRAFICAR figura
         | GRAFICAR figura:f whatever {:System.out.println("Se realizaran las animaciones anteriores en " + f + "\n");:}
         ;
 
-whatever ::= animate:a              {:System.out.println(a.getName());:}
-           | animate:a whatever     {:System.out.println(a.getName());:}
+whatever ::= animate:a              {:System.out.println(a.getLexema());:}
+           | animate:a whatever     {:System.out.println(a.getLexema());:}
            ;
 
 animate ::= ANIMAR OBJETO ANTERIOR PA posx COMA posy COMA tipoA:ta PC {:RESULT = ta;:};
