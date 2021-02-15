@@ -1,14 +1,7 @@
 package analizador;
 
 parser code {:
-       /*@Override
-        public void syntax_error(Symbol st) {
-        	Token token = (Token) st.value;
-            report_error("Error Sintactico con el  Token:"+ token.getLexeme()+" este no pertenece a la estructura - linea: "+token.getLine()+" - columna: "+token.getColumn() + "\n",null);
 
-            System.out.println("Error Sintactico con el Token: " + token.getLexeme() + " este no pertenece a la estructura - linea: " + token.getLine() + ", columna: " + token.getColumn());
-                    errorsList.add(String.format("Error Sintactico con el Token: '%s' este no pertenece a la estructura- linea: %d  columna: %d. Corrige e intenta de nuevo.", token.getLexeme(), token.getLine(), token.getColumn()));
-       }*/
 :}
 
 /*Terminales y no terminales*/
@@ -19,7 +12,7 @@ terminal Token      SUMA, RESTA, MULT, DIV, PA, PC, COMA;
 terminal Token      NUMERO;
 
 non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color;
-non terminal String whatever, animate, tipoA;
+non terminal Token  whatever, animate, tipoA;
 non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados, expr;
 
 //Precedencias
@@ -36,14 +29,14 @@ graph ::= GRAFICAR figura
         | GRAFICAR figura:f whatever {:System.out.println("Se realizaran las animaciones anteriores en " + f + "\n");:}
         ;
 
-whatever ::= animate:a              {:System.out.println((String)a);:}
-           | animate:a whatever     {:System.out.println((String)a);:}
+whatever ::= animate:a              {:System.out.println(a.getName());:}
+           | animate:a whatever     {:System.out.println(a.getName());:}
            ;
 
 animate ::= ANIMAR OBJETO ANTERIOR PA posx COMA posy COMA tipoA:ta PC {:RESULT = ta;:};
 
-tipoA ::= LINEA:l      {:RESULT = l.getLexema();:}
-        | CURVA:c      {:RESULT = c.getLexema();:}
+tipoA ::= LINEA:l      {:RESULT = l;:}
+        | CURVA:c      {:RESULT = c;:}
         ;
 
 figura ::= CUADRADO:f PA param_s PC         {:RESULT = f.getLexema();:}
