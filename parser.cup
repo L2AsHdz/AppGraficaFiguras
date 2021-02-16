@@ -1,6 +1,7 @@
 package AppGraficar.analizadores.sintactico;
 
 import AppGraficar.model.Token;
+import AppGraficar.model.animaciones.Animacion;
 import AppGraficar.model.errores.ErrorAnalisis;
 import AppGraficar.model.errores.TipoError;
 import AppGraficar.model.figuras.*;
@@ -12,6 +13,7 @@ parser code {:
 
        private List<ErrorAnalisis> errores = new ArrayList();
        private List<Figura> figurasAGraficar = new ArrayList();
+       private List<Animacion> animaciones = new ArrayList();
 
        public List<ErrorAnalisis> getErrores(){
               return this.errores;
@@ -21,6 +23,10 @@ parser code {:
               return this.figurasAGraficar;
        }
 
+       public List<Animacion> getAnimaciones(){
+              return this.animaciones;
+       }
+       
        public void syntax_error(Symbol s){
               Token t = (Token) s.value;
               StringBuilder descripcion = new StringBuilder("Se esperaba: ");
@@ -37,8 +43,7 @@ terminal Token      NEGRO, AZUL, ROJO, VERDE, AMARILLO, NARANJA, MORADO, CAFE;
 terminal Token      SUMA, RESTA, MULT, DIV, PA, PC, COMA;
 terminal Token      NUMERO;
 
-non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color;
-non terminal Token  animate, tipoA;
+non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color, animate, tipoA;
 non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados, expr;
 
 //Precedencias
@@ -52,14 +57,19 @@ nose ::= graph
        ;
 
 graph ::= GRAFICAR figura
-        | GRAFICAR figura:f animate:a {:System.out.println("Animando " + f + " con " + a.getName());:}
-        | error PC      {:System.out.println("Error, estructura incorrecta");:}
+        | GRAFICAR figura animate
+
+        | error PC                        {:System.out.println("Error, estructura incorrecta");:}
         ;
 //Agrgar opcion para ognorar cuando vienen varias estructuras animar seguidas
-animate ::= ANIMAR OBJETO ANTERIOR PA posx COMA posy COMA tipoA:ta PC {:RESULT = ta;:};
+animate ::= ANIMAR OBJETO ANTERIOR PA posx:x COMA posy:y COMA tipoA:ta PC 
+           {:
+              animaciones.add(new Animacion(figurasAGraficar.get(figurasAGraficar.size()-1), x, y, ta.toString()));
+           :}
+           ;
 
-tipoA ::= LINEA:l      {:RESULT = l;:}
-        | CURVA:c      {:RESULT = c;:}
+tipoA ::= LINEA:l      {:RESULT = l.getName();:}
+        | CURVA:c      {:RESULT = c.getName();:}
         ;
 
 figura ::= CUADRADO:f PA param_s PC         {:RESULT = f.getName();:}
