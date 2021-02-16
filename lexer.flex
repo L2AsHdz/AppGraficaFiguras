@@ -1,9 +1,14 @@
-package analizador;
+package AppGraficar.analizadores.lexico;
 
+import AppGraficar.analizadores.sintactico.sym;
+import AppGraficar.model.Token;
+import AppGraficar.model.errores.ErrorAnalisis;
+import AppGraficar.model.errores.TipoError;
 import java_cup.runtime.*;
-import static analizador.sym.*;
 import java.util.ArrayList;
 import java.util.List;
+import static AppGraficar.analizadores.sintactico.sym.*;
+import AppGraficar.model.otros.ColorUsado;
 %%
 
 %class Lexer
@@ -15,9 +20,14 @@ import java.util.List;
 
 %{
     private List<ErrorAnalisis> errores = new ArrayList();
+    private List<ColorUsado> usoColores = new ArrayList();
 
     public List<ErrorAnalisis> getErrores(){
         return this.errores;
+    }
+
+    public List<ColorUsado> getUsoColores(){
+        return this.usoColores;
     }
   
     private Symbol symbol(String name, int type){
@@ -31,6 +41,25 @@ import java.util.List;
     private void addLexicError(){
         String descripcion = "El simbolo no pertenece al lenguaje";
         errores.add(new ErrorAnalisis(yytext(), yyline+1, yycolumn+1, TipoError.LEXICO, descripcion));
+    }
+
+    private void aumentarColorUsado(String color){
+        if(usoColores.isEmpty()){
+            usoColores.add(new ColorUsado(color));
+        } else {
+            boolean add = true;
+            
+            for (ColorUsado c : usoColores) {
+                if (c.getNombreColor().equals(color)) {
+                    c.aumentar();
+                    add = false;
+                }
+            }
+            
+            if (add) {
+                usoColores.add(new ColorUsado(color));
+            }
+        }
     }
 
 %}
@@ -56,14 +85,46 @@ NUMERO = 0|([1-9][0-9]*)(\.(0|([0-9]*[1-9])))?
 <YYINITIAL> "poligono"              {return symbol("POLIGONO", POLIGONO);}
 
 //Colores
-<YYINITIAL> "negro"                 {return symbol("NEGRO", NEGRO);}
-<YYINITIAL> "azul"                  {return symbol("AZUL", AZUL);}
-<YYINITIAL> "rojo"                  {return symbol("ROJO", ROJO);}
-<YYINITIAL> "verde"                 {return symbol("VERDE", VERDE);}
-<YYINITIAL> "amarillo"              {return symbol("AMARILLO", AMARILLO);}
-<YYINITIAL> "naranja"               {return symbol("NARANJA", NARANJA);}
-<YYINITIAL> "morado"                {return symbol("MORADO", MORADO);}
-<YYINITIAL> "cafe"                  {return symbol("CAFE", CAFE);}
+<YYINITIAL> "negro"                 {
+                                        aumentarColorUsado("Negro");
+                                        return symbol("NEGRO", NEGRO);
+                                    }
+
+<YYINITIAL> "azul"                  {
+                                        aumentarColorUsado("Azul");
+                                        return symbol("AZUL", AZUL);
+                                    }
+
+<YYINITIAL> "rojo"                  {
+                                        aumentarColorUsado("Rojo");
+                                        return symbol("ROJO", ROJO);
+                                    }
+                                    
+<YYINITIAL> "verde"                 {
+                                        aumentarColorUsado("Verde");
+                                        return symbol("VERDE", VERDE);
+                                    }
+
+<YYINITIAL> "amarillo"              {
+                                        aumentarColorUsado("Amarillo");
+                                        return symbol("AMARILLO", AMARILLO);
+                                    }
+
+<YYINITIAL> "naranja"               {
+                                        aumentarColorUsado("Naranja");
+                                        return symbol("NARANJA", NARANJA);
+                                    }
+
+<YYINITIAL> "morado"                {
+                                        aumentarColorUsado("Morado");
+                                        return symbol("MORADO", MORADO);
+                                    }
+
+<YYINITIAL> "cafe"                  {
+                                        aumentarColorUsado("Cafe");
+                                        return symbol("CAFE", CAFE);
+                                    }
+
 
 <YYINITIAL> {
 

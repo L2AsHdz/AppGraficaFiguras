@@ -1,5 +1,8 @@
-package analizador;
+package AppGraficar.analizadores.sintactico;
 
+import AppGraficar.model.Token;
+import AppGraficar.model.errores.ErrorAnalisis;
+import AppGraficar.model.errores.TipoError;
 import java_cup.runtime.Symbol;
 import java.util.ArrayList;
 import java.util.List;
