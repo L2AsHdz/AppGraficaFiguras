@@ -3,6 +3,7 @@ package AppGraficar.analizadores.sintactico;
 import AppGraficar.model.Token;
 import AppGraficar.model.errores.ErrorAnalisis;
 import AppGraficar.model.errores.TipoError;
+import AppGraficar.model.figuras.*;
 import java_cup.runtime.Symbol;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +11,14 @@ import java.util.List;
 parser code {:
 
        private List<ErrorAnalisis> errores = new ArrayList();
+       private List<Figura> figurasAGraficar = new ArrayList();
 
        public List<ErrorAnalisis> getErrores(){
               return this.errores;
+       }
+
+       public List<Figura> getFiguras(){
+              return this.figurasAGraficar;
        }
 
        public void syntax_error(Symbol s){
@@ -49,7 +55,7 @@ graph ::= GRAFICAR figura
         | GRAFICAR figura:f animate:a {:System.out.println("Animando " + f + " con " + a.getName());:}
         | error PC      {:System.out.println("Error, estructura incorrecta");:}
         ;
-
+//Agrgar opcion para ognorar cuando vienen varias estructuras animar seguidas
 animate ::= ANIMAR OBJETO ANTERIOR PA posx COMA posy COMA tipoA:ta PC {:RESULT = ta;:};
 
 tipoA ::= LINEA:l      {:RESULT = l;:}
@@ -65,36 +71,31 @@ figura ::= CUADRADO:f PA param_s PC         {:RESULT = f.getName();:}
 
 param_s ::= posx:x COMA posy:y COMA lado:l COMA color:c
             {:
-                System.out.println("\nGraficando cuadrado color " + c);
-                System.out.println("posx: "+ x + " - posy: " + y + " - lado: " + l);
+                figurasAGraficar.add(new Cuadrado(l, x, y, c.toString()));
             :}
             ;
 
 param_c ::= posx:x COMA posy:y COMA radio:r COMA color:c
             {:
-                System.out.println("\nGraficando circulo color " + c);
-                System.out.println("posx: "+ x + " - posy: " + y + " - radio: " + r);
+                figurasAGraficar.add(new Circulo(r, x, y, c.toString()));
             :}
             ;
 
 param_r ::= posx:x COMA posy:y COMA alto:h COMA ancho:w COMA color:c
             {:
-                System.out.println("\nGraficando rectangulo color " + c);
-                System.out.println("posx: "+ x + " - posy: " + y + " - altura: " + h + " - ancho: " + w);
+                figurasAGraficar.add(new Rectangulo(h, w, x, y, c.toString()));
             :}
             ;
 
 param_l ::= posx:x COMA posy:y COMA posx:x2 COMA posy:y2 COMA color:c
             {:
-                System.out.println("\nGraficando linea color " + c);
-                System.out.println("posx: "+ x + " - posy: " + y + "posx2: "+ x2 + " - posy2: " + y2);
+                figurasAGraficar.add(new Linea(x2, y2, x, y, c.toString()));
             :}
             ;
 
 param_p ::= posx:x COMA posy:y COMA alto:h COMA ancho:w COMA cant_lados:cl COMA color:c
             {:
-                System.out.println("\nGraficando poligono color " + c);
-                System.out.println("posx: "+ x + " - posy: " + y + " - alto: " + h + " - ancho: " + w + " - cant lados: " + cl);
+                figurasAGraficar.add(new Poligono(h, w, cl.intValue(), x, y, c.toString()));
             :}
             ;
 
