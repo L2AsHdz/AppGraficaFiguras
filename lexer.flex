@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static AppGraficar.analizadores.sintactico.sym.*;
 import AppGraficar.model.otros.ColorUsado;
+import AppGraficar.model.otros.FiguraUsada;
 %%
 
 %class Lexer
@@ -21,6 +22,7 @@ import AppGraficar.model.otros.ColorUsado;
 %{
     private List<ErrorAnalisis> errores = new ArrayList();
     private List<ColorUsado> usoColores = new ArrayList();
+    private List<FiguraUsada> usoFiguras = new ArrayList();
 
     public List<ErrorAnalisis> getErrores(){
         return this.errores;
@@ -28,6 +30,10 @@ import AppGraficar.model.otros.ColorUsado;
 
     public List<ColorUsado> getUsoColores(){
         return this.usoColores;
+    }
+
+    public List<FiguraUsada> getUsoFiguras(){
+        return this.usoFiguras;
     }
   
     private Symbol symbol(String name, int type){
@@ -62,6 +68,25 @@ import AppGraficar.model.otros.ColorUsado;
         }
     }
 
+    private void aumentarFiguraUsada(String figura){
+        if(usoFiguras.isEmpty()){
+            usoFiguras.add(new FiguraUsada(figura));
+        } else {
+            boolean add = true;
+            
+            for (FiguraUsada f : usoFiguras) {
+                if (f.getNombreFigura().equals(figura)) {
+                    f.aumentar();
+                    add = false;
+                }
+            }
+            
+            if (add) {
+                usoFiguras.add(new FiguraUsada(figura));
+            }
+        }
+    }
+
 %}
 
 SALTO = \n|\r|\r\n
@@ -78,11 +103,27 @@ NUMERO = 0|([1-9][0-9]*)(\.(0|([0-9]*[1-9])))?
 <YYINITIAL> "curva"                 {return symbol("CURVA", CURVA);}
 
 //Figuras
-<YYINITIAL> "circulo"               {return symbol("CIRCULO", CIRCULO);}
-<YYINITIAL> "cuadrado"              {return symbol("CUADRADO", CUADRADO);}
-<YYINITIAL> "rectangulo"            {return symbol("RECTANGULO", RECTANGULO);}
+<YYINITIAL> "circulo"               {
+                                        aumentarFiguraUsada("Circulo");
+                                        return symbol("CIRCULO", CIRCULO);
+                                    }
+
+<YYINITIAL> "cuadrado"              {
+                                        aumentarFiguraUsada("Cuadrado");
+                                        return symbol("CUADRADO", CUADRADO);
+                                    }
+                                    
+<YYINITIAL> "rectangulo"            {
+                                        aumentarFiguraUsada("Rectangulo");
+                                        return symbol("RECTANGULO", RECTANGULO);
+                                    }
+
 <YYINITIAL> "linea"                 {return symbol("LINEA", LINEA);}
-<YYINITIAL> "poligono"              {return symbol("POLIGONO", POLIGONO);}
+
+<YYINITIAL> "poligono"              {
+                                        aumentarFiguraUsada("Poligono");
+                                        return symbol("POLIGONO", POLIGONO);
+                                    }
 
 //Colores
 <YYINITIAL> "negro"                 {
