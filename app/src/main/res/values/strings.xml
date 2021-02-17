@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AppGraficar</string>
+    <string name="btn_compilar">Compilar</string>
+    <string name="txt_predeterminado">Ingrese las instrucciones aqui.</string>
+    <string name="btn_limpiar">Limpiar</string>
+    <string name="btn_back">Regresar</string>
+</resources>
