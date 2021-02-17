@@ -1,10 +1,12 @@
 package com.l2ashdz.appgraficar.model.figuras;
 
+import java.io.Serializable;
+
 /**
  *
  * @author asael
  */
-public class Figura {
+public class Figura implements Serializable {
     
     private float posx;
     private float posy;

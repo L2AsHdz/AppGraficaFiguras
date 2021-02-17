@@ -1,10 +1,12 @@
 package com.l2ashdz.appgraficar.model.errores;
 
+import java.io.Serializable;
+
 /**
  *
  * @author asael
  */
-public class ErrorAnalisis {
+public class ErrorAnalisis implements Serializable {
 
     private String lexema;
     private int linea;

@@ -2,11 +2,13 @@ package com.l2ashdz.appgraficar.model.animaciones;
 
 import com.l2ashdz.appgraficar.model.figuras.Figura;
 
+import java.io.Serializable;
+
 /**
  *
  * @author asael
  */
-public class Animacion {
+public class Animacion implements Serializable {
     
     private Figura figura;
     private float posx;

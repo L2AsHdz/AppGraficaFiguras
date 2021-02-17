@@ -29,6 +29,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="16dp"
+        android:onClick="analizar"
         android:text="@string/btn_compilar"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

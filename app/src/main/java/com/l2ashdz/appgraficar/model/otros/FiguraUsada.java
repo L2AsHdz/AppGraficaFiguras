@@ -1,10 +1,12 @@
 package com.l2ashdz.appgraficar.model.otros;
 
+import java.io.Serializable;
+
 /**
  *
  * @author asael
  */
-public class FiguraUsada {
+public class FiguraUsada implements Serializable {
     
     private String nombreFigura;
     private int cantUsos;

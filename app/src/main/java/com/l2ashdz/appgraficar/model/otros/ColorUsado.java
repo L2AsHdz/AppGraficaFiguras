@@ -1,10 +1,12 @@
 package com.l2ashdz.appgraficar.model.otros;
 
+import java.io.Serializable;
+
 /**
  *
  * @author asael
  */
-public class ColorUsado {
+public class ColorUsado implements Serializable {
     
     private String nombreColor;
     private int cantUsos;

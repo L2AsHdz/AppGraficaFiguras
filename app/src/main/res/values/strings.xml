@@ -4,4 +4,5 @@
     <string name="txt_predeterminado">Ingrese las instrucciones aqui.</string>
     <string name="btn_limpiar">Limpiar</string>
     <string name="btn_back">Regresar</string>
+    <string name="btn_reporte">Ver Reportes</string>
 </resources>
