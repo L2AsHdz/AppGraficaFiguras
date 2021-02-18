@@ -15,9 +15,11 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="monospace"
             android:gravity="center"
             android:text="@string/report_colores"
-            android:textSize="24sp" />
+            android:textColor="@color/black"
+            android:textSize="30sp" />
 
         <ScrollView
             android:layout_width="match_parent"
