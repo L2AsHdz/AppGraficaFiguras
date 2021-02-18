@@ -10,13 +10,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
-        <activity android:name=".ReportesActivity"
+        <activity android:name=".GraficasActivity"></activity>
+        <activity
+            android:name=".ReportesActivity"
             android:parentActivityName=".ResultadoActivity">
             >
         </activity>
-        <activity android:name=".ResultadoActivity"
-            android:parentActivityName=".MainActivity">
-        </activity>
+        <activity
+            android:name=".ResultadoActivity"
+            android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
