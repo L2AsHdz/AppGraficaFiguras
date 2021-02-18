@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import com.l2ashdz.appgraficar.analizadores.lexico.Lexer;
 import com.l2ashdz.appgraficar.analizadores.sintactico.Parser;
-import com.l2ashdz.appgraficar.controller.Resultados;
+import com.l2ashdz.appgraficar.model.Resultados;
 
 import java.io.StringReader;
 

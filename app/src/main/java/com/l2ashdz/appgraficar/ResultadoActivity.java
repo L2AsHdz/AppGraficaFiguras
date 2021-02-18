@@ -5,10 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.l2ashdz.appgraficar.controller.Resultados;
+import com.l2ashdz.appgraficar.model.Resultados;
 import com.l2ashdz.appgraficar.model.animaciones.Animacion;
 import com.l2ashdz.appgraficar.model.errores.ErrorAnalisis;
 import com.l2ashdz.appgraficar.model.figuras.Circulo;
@@ -20,11 +19,18 @@ import com.l2ashdz.appgraficar.model.figuras.Rectangulo;
 import com.l2ashdz.appgraficar.model.otros.ColorUsado;
 import com.l2ashdz.appgraficar.model.otros.FiguraUsada;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ResultadoActivity extends AppCompatActivity {
 
-    TextView txtResult;
+    private TextView txtResult;
+    private Resultados results;
+    private List<ErrorAnalisis> errores;
+    private List<ColorUsado> usoColores;
+    private List<FiguraUsada> usoFiguras;
+    private List<Figura> figuras;
+    private List<Animacion> animaciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +38,22 @@ public class ResultadoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_resultado);
 
         txtResult = findViewById(R.id.txt_resultado);
-        Resultados results = (Resultados) getIntent().getSerializableExtra("resultados");
+        results = (Resultados) getIntent().getSerializableExtra("resultados");
 
         graficar(results);
     }
 
     private void graficar(Resultados results){
 
-        List<ErrorAnalisis> errores = results.getErrores();
-        List<ColorUsado> colores = results.getUsoColores();
-        List<FiguraUsada> usoFiguras = results.getUsoFiguras();
-        List<Figura> figuras = results.getFiguras();
-        List<Animacion> animaciones = results.getAnimaciones();
+        errores = results.getErrores();
+        usoColores = results.getUsoColores();
+        usoFiguras = results.getUsoFiguras();
+        figuras = results.getFiguras();
+        animaciones = results.getAnimaciones();
 
         errores.forEach(e -> txtResult.append(e.getDescripcion()));
 
-        colores.forEach(e -> txtResult.append("\n\n" + e.getNombreColor() + " - " + e.getCantUsos()));
+        usoColores.forEach(e -> txtResult.append("\n\n" + e.getNombreColor() + " - " + e.getCantUsos()));
 
         usoFiguras.forEach(f -> txtResult.append("\n\n" + f.getNombreFigura() + " - " + f.getCantUsos()));
 
@@ -78,8 +84,9 @@ public class ResultadoActivity extends AppCompatActivity {
         animaciones.forEach(a -> txtResult.append("Se animara " + a.getFigura().getClass() + " color: "+ a.getFigura().getColor() +", tipo de animacion: " + a.getTipoAnimacion()));
     }
 
-    public void regresar(View view){
-        Intent intent = new Intent(this, MainActivity.class);
+    public void verReportes(View view){
+        Intent intent = new Intent(this, ReportesActivity.class);
+        intent.putExtra("results", results);
         startActivity(intent);
     }
 }

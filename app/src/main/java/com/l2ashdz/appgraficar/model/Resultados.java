@@ -1,4 +1,4 @@
-package com.l2ashdz.appgraficar.controller;
+package com.l2ashdz.appgraficar.model;
 
 import com.l2ashdz.appgraficar.analizadores.lexico.Lexer;
 import com.l2ashdz.appgraficar.analizadores.sintactico.Parser;
