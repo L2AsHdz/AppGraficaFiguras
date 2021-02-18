@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private void enviarDatos(Lexer lexer, Parser parser){
         Resultados results = new Resultados(lexer, parser);
 
-        Intent intent = new Intent(this, ResultadoActivity.class);
+        Intent intent = new Intent(this, GraficasActivity.class);
         intent.putExtra("resultados", results);
         startActivity(intent);
     }

@@ -6,13 +6,18 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
+import com.l2ashdz.appgraficar.model.figuras.Circulo;
+import com.l2ashdz.appgraficar.model.figuras.Cuadrado;
 import com.l2ashdz.appgraficar.model.figuras.Figura;
+import com.l2ashdz.appgraficar.model.figuras.Linea;
+import com.l2ashdz.appgraficar.model.figuras.Poligono;
+import com.l2ashdz.appgraficar.model.figuras.Rectangulo;
 
 import java.util.List;
 
 public class Lienzo extends View {
 
-    private List<Figura> figurasAGrraficar;
+    private List<Figura> figurasAGraficar;
     private Paint redPincel;
     private Paint bluePincel;
     private Paint yellowPincel;
@@ -24,47 +29,82 @@ public class Lienzo extends View {
 
     public Lienzo(Context context, List<Figura> figurasAGrraficar) {
         super(context);
-        this.figurasAGrraficar = figurasAGrraficar;
+        this.figurasAGraficar = figurasAGrraficar;
 
         inicializarPinceles();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        figurasAGraficar.forEach(f -> {
+            Paint pincel;
 
+            switch(f.getColor()){
+                case "ROJO":
+                    pincel = this.redPincel;
+                    break;
+                case "AZUL":
+                    pincel = this.bluePincel;
+                    break;
+                case "AMARILLO":
+                    pincel = this.yellowPincel;
+                    break;
+                case "CAFE":
+                    pincel = this.brownPincel;
+                    break;
+                case "NEGRO":
+                    pincel = this.blackPincel;
+                    break;
+                case "NARANJA":
+                    pincel = this.orangePincel;
+                    break;
+                case "VERDE":
+                    pincel = this.greenPincel;
+                    break;
+                case "MORADO":
+                    pincel = this.purplePincel;
+                    break;
+                default:
+                    pincel = new Paint();
+                    pincel.setColor(Color.CYAN);
+                    pincel.setStyle(Paint.Style.FILL);
+            }
+
+            if (f instanceof Circulo) {
+                Circulo c = (Circulo) f;
+                canvas.drawCircle(c.getPosx(), c.getPosy(), c.getRadio(), pincel);
+            } else if (f instanceof Cuadrado) {
+                Cuadrado c = (Cuadrado) f;
+                canvas.drawRect(c.getPosx(), c.getPosy(), c.getPosx()+c.getLado(), c.getPosy()+c.getLado(), pincel);
+            } else if (f instanceof Rectangulo) {
+                Rectangulo r = (Rectangulo) f;
+                canvas.drawRect(r.getPosx(), r.getPosy(), r.getPosx()+r.getAncho(), r.getPosy()+r.getAlto(), pincel);
+            } else if (f instanceof Linea) {
+                Linea l = (Linea) f;
+                canvas.drawLine(l.getPosx(), l.getPosy(), l.getPosx2(), l.getPosy2(), pincel);
+            } else if (f instanceof Poligono) {
+                Poligono p = (Poligono) f;
+            }
+        });
     }
 
     private void inicializarPinceles(){
-        this.redPincel = new Paint();
-        this.redPincel.setColor(Color.RED);
-        this.redPincel.setStyle(Paint.Style.FILL);
 
-        this.greenPincel = new Paint();
-        this.greenPincel.setColor(Color.GREEN);
-        this.greenPincel.setStyle(Paint.Style.FILL);
+        this.redPincel = nuevoPincel(Color.RED);
+        this.greenPincel = nuevoPincel(Color.GREEN);
+        this.bluePincel = nuevoPincel(Color.BLUE);
+        this.yellowPincel = nuevoPincel(Color.YELLOW);
+        this.blackPincel = nuevoPincel(Color.BLACK);
+        this.brownPincel = nuevoPincel(Color.rgb(153, 102, 51));
+        this.orangePincel = nuevoPincel(Color.rgb(255, 128, 0));
+        this.purplePincel = nuevoPincel(Color.rgb(153, 0, 204));
+    }
 
-        this.bluePincel = new Paint();
-        this.bluePincel.setColor(Color.BLUE);
-        this.bluePincel.setStyle(Paint.Style.FILL);
-
-        this.yellowPincel = new Paint();
-        this.yellowPincel.setColor(Color.YELLOW);
-        this.yellowPincel.setStyle(Paint.Style.FILL);
-
-        this.brownPincel = new Paint();
-        this.brownPincel.setColor(Color.rgb(153, 102, 51));
-        this.brownPincel.setStyle(Paint.Style.FILL);
-
-        this.blackPincel = new Paint();
-        this.blackPincel.setColor(Color.BLACK);
-        this.blackPincel.setStyle(Paint.Style.FILL);
-
-        this.orangePincel = new Paint();
-        this.orangePincel.setColor(Color.rgb(255, 128, 0));
-        this.orangePincel.setStyle(Paint.Style.FILL);
-
-        this.purplePincel = new Paint();
-        this.purplePincel.setColor(Color.rgb(153, 0, 204));
-        this.purplePincel.setStyle(Paint.Style.FILL);
+    private Paint nuevoPincel(int color){
+        Paint pincel = new Paint();
+        pincel.setColor(color);
+        pincel.setStyle(Paint.Style.FILL);
+        pincel.setStrokeWidth(10);
+        return pincel;
     }
 }
