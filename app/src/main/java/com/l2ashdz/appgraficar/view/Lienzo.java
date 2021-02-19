@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
+import com.l2ashdz.appgraficar.model.animaciones.Animacion;
 import com.l2ashdz.appgraficar.model.figuras.Circulo;
 import com.l2ashdz.appgraficar.model.figuras.Cuadrado;
 import com.l2ashdz.appgraficar.model.figuras.Figura;
@@ -18,6 +19,7 @@ import java.util.List;
 public class Lienzo extends View {
 
     private List<Figura> figurasAGraficar;
+    private List<Animacion> animaciones;
     private Paint redPincel;
     private Paint bluePincel;
     private Paint yellowPincel;
@@ -26,17 +28,30 @@ public class Lienzo extends View {
     private Paint orangePincel;
     private Paint greenPincel;
     private Paint purplePincel;
+    private float x = 100;
+    private float y = 100;
+    private float x2 = 101;
+    private float y2 = 300;
+    private float xtemp = x;
+    private float ytemp = y;
+    private float distX = x2 - x;
+    private float distY = y2 - y;
+    private float pendiente;
+    private float b;
 
-    public Lienzo(Context context, List<Figura> figurasAGrraficar) {
+    public Lienzo(Context context, List<Figura> figurasAGrraficar, List<Animacion> animaciones) {
         super(context);
         this.figurasAGraficar = figurasAGrraficar;
+        this.animaciones = animaciones;
 
         inicializarPinceles();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        figurasAGraficar.forEach(f -> {
+        super.onDraw(canvas);
+
+        /*figurasAGraficar.forEach(f -> {
             Paint pincel;
 
             switch(f.getColor()){
@@ -85,10 +100,18 @@ public class Lienzo extends View {
             } else if (f instanceof Poligono) {
                 Poligono p = (Poligono) f;
             }
-        });
+        });*/
+        canvas.drawCircle(xtemp, ytemp, 100, nuevoPincel(Color.BLACK));
+        canvas.drawLine(x, y, x2, y2, nuevoPincel(Color.RED));
+
+        calcularPosiciones();
+
+        if (xtemp != x2 | ytemp != y2) {
+            invalidate();
+        }
     }
 
-    private void inicializarPinceles(){
+    private void inicializarPinceles() {
 
         this.redPincel = nuevoPincel(Color.RED);
         this.greenPincel = nuevoPincel(Color.GREEN);
@@ -100,11 +123,47 @@ public class Lienzo extends View {
         this.purplePincel = nuevoPincel(Color.rgb(153, 0, 204));
     }
 
-    private Paint nuevoPincel(int color){
+    private Paint nuevoPincel(int color) {
         Paint pincel = new Paint();
         pincel.setColor(color);
         pincel.setStyle(Paint.Style.FILL);
         pincel.setStrokeWidth(10);
         return pincel;
+    }
+
+    private void calcularPendiente(float x1, float y1, float x2, float y2) {
+        pendiente = (y2 - y1) / (x2 - x1);
+    }
+
+    private void calcularB(float x1, float y1) {
+        b = y1 - (pendiente * x1);
+    }
+
+    private float calcularY(float x) {
+        return pendiente * x + b;
+    }
+
+    private float calcularX(float y) {
+        return (y - b) / pendiente;
+    }
+
+    private void calcularPosiciones() {
+        if (distX == 0 && distY != 0) {
+            ytemp = (distY < 0) ? ytemp - 1 : ytemp + 1;
+        } else if (distX != 0 && distY == 0) {
+            xtemp = (distX < 0) ? xtemp - 1 : xtemp + 1;
+        } else if (distX != 0 && distY != 0) {
+            calcularPendiente(x, y, x2, y2);
+            calcularB(x, y);
+            if (Math.abs(distX) > Math.abs(distY)) {
+                xtemp = (distX < 0) ? xtemp - 1 : xtemp + 1;
+                ytemp = calcularY(xtemp);
+            } else {
+                ytemp = (distY < 0) ? ytemp - 1 : ytemp + 1;
+                xtemp = calcularX(ytemp);
+            }
+        } else {
+            //No hacer nada
+        }
     }
 }

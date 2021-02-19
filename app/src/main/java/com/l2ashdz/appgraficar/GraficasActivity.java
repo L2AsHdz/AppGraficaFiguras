@@ -22,7 +22,7 @@ public class GraficasActivity extends AppCompatActivity {
         results = (Resultados) getIntent().getSerializableExtra("resultados");
 
         cLayout = findViewById(R.id.cLayout);
-        Lienzo lienzo = new Lienzo(this, results.getFiguras());
+        Lienzo lienzo = new Lienzo(this, results.getFiguras(), results.getAnimaciones());
         cLayout.addView(lienzo);
     }
 }
