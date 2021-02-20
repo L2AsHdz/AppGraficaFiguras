@@ -84,7 +84,7 @@ public class Lienzo extends View {
             canvas.drawRect(xtemp, ytemp, xtemp + r.getAncho(), ytemp + r.getAlto(), pincel);
         } else if (f instanceof Linea) {
             Linea l = (Linea) f;
-            canvas.drawLine(xtemp, ytemp, l.getPosx2(), l.getPosy2(), pincel);
+            canvas.drawLine(xtemp, ytemp, xtemp + (l.getPosx2() - l.getPosx()), ytemp + (l.getPosy2() - l.getPosy()), pincel);
         } else if (f instanceof Poligono) {
             Poligono p = (Poligono) f;
         }
@@ -101,7 +101,14 @@ public class Lienzo extends View {
         } else {
             f.setPosx(xtemp);
             f.setPosy(ytemp);
+
+            if (f instanceof Linea) {
+                Linea l = (Linea) f;
+                l.setPosx2(xtemp + (l.getPosx2() - l.getPosx()));
+                l.setPosy2(ytemp + (l.getPosy2() - l.getPosy()));
+            }
             figurasAGraficar.add(f);
+
             xtemp = -1;
             ytemp = -1;
             if (index < animaciones.size() - 1) {
