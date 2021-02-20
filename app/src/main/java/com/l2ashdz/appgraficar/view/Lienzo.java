@@ -216,17 +216,9 @@ public class Lienzo extends View {
             ytemp = calcularYCurva(xtemp);
         } else if (distX != 0 && distY != 0) {
             System.out.println("X: " + xtemp + "Y: " + ytemp);
-            if (abs(distX) > abs(distY)) {
-                xtemp = (distX < 0) ? xtemp - 1 : xtemp + 1;
-                ytemp = calcularYCurva(xtemp);
-
-                System.out.println("+X: " + xtemp + "Y: " + ytemp);
-            } else {
-                ytemp = (distY < 0) ? ytemp - 1 : ytemp + 1;
-                xtemp = calcularXCurva(ytemp);
-
-                System.out.println("X: " + xtemp + "+Y: " + ytemp + " - " + radio + " (" + h + "," + k + ")");
-            }
+            xtemp = (distX < 0) ? xtemp - 1 : xtemp + 1;
+            ytemp = calcularYCurva(xtemp);
+            System.out.println("+X: " + xtemp + "Y: " + ytemp);
         } else {
             //No hacer nada
         }
