@@ -1,6 +1,8 @@
 package com.l2ashdz.appgraficar.view;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,6 +20,7 @@ import java.util.List;
 
 public class Lienzo extends View {
 
+    private Context context;
     private List<Figura> figurasAGraficar;
     private List<Animacion> animaciones;
     private Paint redPincel;
@@ -28,19 +31,16 @@ public class Lienzo extends View {
     private Paint orangePincel;
     private Paint greenPincel;
     private Paint purplePincel;
-    private float x = 100;
-    private float y = 100;
-    private float x2 = 101;
-    private float y2 = 300;
-    private float xtemp = x;
-    private float ytemp = y;
-    private float distX = x2 - x;
-    private float distY = y2 - y;
+    private boolean animar = false;
+    private float xtemp = -1;
+    private float ytemp = -1;
     private float pendiente;
     private float b;
+    private int index = 0;
 
     public Lienzo(Context context, List<Figura> figurasAGrraficar, List<Animacion> animaciones) {
         super(context);
+        this.context = context;
         this.figurasAGraficar = figurasAGrraficar;
         this.animaciones = animaciones;
 
@@ -51,64 +51,78 @@ public class Lienzo extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        /*figurasAGraficar.forEach(f -> {
-            Paint pincel;
-
-            switch(f.getColor()){
-                case "ROJO":
-                    pincel = this.redPincel;
-                    break;
-                case "AZUL":
-                    pincel = this.bluePincel;
-                    break;
-                case "AMARILLO":
-                    pincel = this.yellowPincel;
-                    break;
-                case "CAFE":
-                    pincel = this.brownPincel;
-                    break;
-                case "NEGRO":
-                    pincel = this.blackPincel;
-                    break;
-                case "NARANJA":
-                    pincel = this.orangePincel;
-                    break;
-                case "VERDE":
-                    pincel = this.greenPincel;
-                    break;
-                case "MORADO":
-                    pincel = this.purplePincel;
-                    break;
-                default:
-                    pincel = new Paint();
-                    pincel.setColor(Color.CYAN);
-                    pincel.setStyle(Paint.Style.FILL);
-            }
+        figurasAGraficar.forEach(f -> {
+            Paint pincel = setPincel(f.getColor());
 
             if (f instanceof Circulo) {
                 Circulo c = (Circulo) f;
                 canvas.drawCircle(c.getPosx(), c.getPosy(), c.getRadio(), pincel);
             } else if (f instanceof Cuadrado) {
                 Cuadrado c = (Cuadrado) f;
-                canvas.drawRect(c.getPosx(), c.getPosy(), c.getPosx()+c.getLado(), c.getPosy()+c.getLado(), pincel);
+                canvas.drawRect(c.getPosx(), c.getPosy(), c.getPosx() + c.getLado(), c.getPosy() + c.getLado(), pincel);
             } else if (f instanceof Rectangulo) {
                 Rectangulo r = (Rectangulo) f;
-                canvas.drawRect(r.getPosx(), r.getPosy(), r.getPosx()+r.getAncho(), r.getPosy()+r.getAlto(), pincel);
+                canvas.drawRect(r.getPosx(), r.getPosy(), r.getPosx() + r.getAncho(), r.getPosy() + r.getAlto(), pincel);
             } else if (f instanceof Linea) {
                 Linea l = (Linea) f;
                 canvas.drawLine(l.getPosx(), l.getPosy(), l.getPosx2(), l.getPosy2(), pincel);
             } else if (f instanceof Poligono) {
                 Poligono p = (Poligono) f;
             }
-        });*/
-        canvas.drawCircle(xtemp, ytemp, 100, nuevoPincel(Color.BLACK));
+        });
+
+
+            Figura f = animaciones.get(index).getFigura();
+            Paint pincel = setPincel(f.getColor());
+
+            if (xtemp == -1 & ytemp == -1) {
+                xtemp = f.getPosx();
+                ytemp = f.getPosy();
+            }
+            figurasAGraficar.remove(f);
+
+            if (f instanceof Circulo) {
+                Circulo c = (Circulo) f;
+                canvas.drawCircle(xtemp, ytemp, c.getRadio(), pincel);
+            } else if (f instanceof Cuadrado) {
+                Cuadrado c = (Cuadrado) f;
+                canvas.drawRect(xtemp, ytemp, xtemp + c.getLado(), ytemp + c.getLado(), pincel);
+            } else if (f instanceof Rectangulo) {
+                Rectangulo r = (Rectangulo) f;
+                canvas.drawRect(xtemp, ytemp, xtemp + r.getAncho(), ytemp + r.getAlto(), pincel);
+            } else if (f instanceof Linea) {
+                Linea l = (Linea) f;
+                canvas.drawLine(xtemp, ytemp, l.getPosx2(), l.getPosy2(), pincel);
+            } else if (f instanceof Poligono) {
+                Poligono p = (Poligono) f;
+            }
+
+            calcularPosiciones(f.getPosx(), f.getPosy(), animaciones.get(index).getPosx(), animaciones.get(index).getPosy());
+
+            if (xtemp != animaciones.get(index).getPosx() | ytemp != animaciones.get(index).getPosy()) {
+                invalidate();
+                if (figurasAGraficar.contains(f)){
+                    System.out.println("SI existe, eliminalo perro");
+                }
+            } else {
+                f.setPosx(xtemp);
+                f.setPosy(ytemp);
+                figurasAGraficar.add(f);
+                xtemp = -1;
+                ytemp = -1;
+                if (index < animaciones.size()-1){
+                    index++;
+                    invalidate();
+                }
+            }
+
+
+        /*canvas.drawCircle(xtemp, ytemp, 100, nuevoPincel(Color.BLACK));
         canvas.drawLine(x, y, x2, y2, nuevoPincel(Color.RED));
 
-        calcularPosiciones();
+        calcularPosiciones();*/
 
-        if (xtemp != x2 | ytemp != y2) {
-            invalidate();
-        }
+
     }
 
     private void inicializarPinceles() {
@@ -147,7 +161,10 @@ public class Lienzo extends View {
         return (y - b) / pendiente;
     }
 
-    private void calcularPosiciones() {
+    private void calcularPosiciones(float x, float y, float x2, float y2) {
+        float distX = x2 - x;
+        float distY = y2 - y;
+
         if (distX == 0 && distY != 0) {
             ytemp = (distY < 0) ? ytemp - 1 : ytemp + 1;
         } else if (distX != 0 && distY == 0) {
@@ -164,6 +181,28 @@ public class Lienzo extends View {
             }
         } else {
             //No hacer nada
+        }
+    }
+
+    private Paint setPincel(String color) {
+        switch (color) {
+            case "ROJO":
+            default:
+                return this.redPincel;
+            case "AZUL":
+                return this.bluePincel;
+            case "AMARILLO":
+                return this.yellowPincel;
+            case "CAFE":
+                return this.brownPincel;
+            case "NEGRO":
+                return this.blackPincel;
+            case "NARANJA":
+                return this.orangePincel;
+            case "VERDE":
+                return this.greenPincel;
+            case "MORADO":
+                return this.purplePincel;
         }
     }
 }
