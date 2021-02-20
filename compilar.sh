@@ -7,5 +7,5 @@ echo ---------------------
 echo Compilando Parser...
 cup -parser Parser -symbols sym parser.cup
 
-mv Lexer.java /home/asael/NetBeansProjects/Pruebajflexycup/src/main/java/AppGraficar/analizadores/lexico/
-mv Parser.java sym.java /home/asael/NetBeansProjects/Pruebajflexycup/src/main/java/AppGraficar/analizadores/sintactico/
+mv Lexer.java /home/asael/AndroidStudioProjects/AppGraficar/app/src/main/java/com/l2ashdz/appgraficar/analizadores/lexico/
+mv Parser.java sym.java /home/asael/AndroidStudioProjects/AppGraficar/app/src/main/java/com/l2ashdz/appgraficar/analizadores/sintactico/

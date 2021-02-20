@@ -1,15 +1,18 @@
-package AppGraficar.analizadores.lexico;
+package com.l2ashdz.appgraficar.analizadores.lexico;
 
-import AppGraficar.analizadores.sintactico.sym;
-import AppGraficar.model.Token;
-import AppGraficar.model.errores.ErrorAnalisis;
-import AppGraficar.model.errores.TipoError;
-import java_cup.runtime.*;
+import com.l2ashdz.appgraficar.analizadores.sintactico.sym;
+import com.l2ashdz.appgraficar.model.Token;
+import com.l2ashdz.appgraficar.model.errores.ErrorAnalisis;
+import com.l2ashdz.appgraficar.model.errores.TipoError;
+import com.l2ashdz.appgraficar.model.otros.ColorUsado;
+import com.l2ashdz.appgraficar.model.otros.FiguraUsada;
+
 import java.util.ArrayList;
 import java.util.List;
-import static AppGraficar.analizadores.sintactico.sym.*;
-import AppGraficar.model.otros.ColorUsado;
-import AppGraficar.model.otros.FiguraUsada;
+
+import java_cup.runtime.Symbol;
+
+import static com.l2ashdz.appgraficar.analizadores.sintactico.sym.*;
 %%
 
 %class Lexer

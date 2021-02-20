@@ -1,19 +1,25 @@
-package AppGraficar.analizadores.sintactico;
+package com.l2ashdz.appgraficar.analizadores.sintactico;
 
-import AppGraficar.model.Token;
-import AppGraficar.model.animaciones.Animacion;
-import AppGraficar.model.errores.ErrorAnalisis;
-import AppGraficar.model.errores.TipoError;
-import AppGraficar.model.figuras.*;
-import java_cup.runtime.Symbol;
+import com.l2ashdz.appgraficar.model.Token;
+import com.l2ashdz.appgraficar.model.animaciones.Animacion;
+import com.l2ashdz.appgraficar.model.errores.ErrorAnalisis;
+import com.l2ashdz.appgraficar.model.errores.TipoError;
+import com.l2ashdz.appgraficar.model.figuras.*;
+import com.l2ashdz.appgraficar.model.otros.AnimacionUsada;
+import com.l2ashdz.appgraficar.model.otros.FiguraUsada;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import java_cup.runtime.Symbol;
 
 parser code {:
 
        private List<ErrorAnalisis> errores = new ArrayList();
        private List<Figura> figurasAGraficar = new ArrayList();
        private List<Animacion> animaciones = new ArrayList();
+       private List<AnimacionUsada> usoAnimaciones = new ArrayList();
+       private FiguraUsada usoLinea = new FiguraUsada("Linea");
 
        public List<ErrorAnalisis> getErrores(){
               return this.errores;
@@ -26,6 +32,14 @@ parser code {:
        public List<Animacion> getAnimaciones(){
               return this.animaciones;
        }
+
+       public List<AnimacionUsada> getUsoAnimaciones(){
+              return this.usoAnimaciones;
+       }
+
+       public FiguraUsada getUsoLinea(){
+              return this.usoLinea;
+       }
        
        public void syntax_error(Symbol s){
               Token t = (Token) s.value;
@@ -34,6 +48,25 @@ parser code {:
               //report_error("Error sintactico en tonken: "+t.getName()+", en la linea: "+t.getLinea()+" y columna: "+t.getColumna()+", intentado recuperarse", cur_token);
               errores.add(new ErrorAnalisis(t.getName(), t.getLinea(), t.getColumna(), TipoError.SINTACTICO, descripcion.toString()));
        }
+
+       private void aumentarAnimacionUsada(String animacion){
+              if(usoAnimaciones.isEmpty()){
+                     usoAnimaciones.add(new AnimacionUsada(animacion));
+              } else {
+                  boolean add = true;
+                  
+                  for (AnimacionUsada a : usoAnimaciones) {
+                      if (a.getNombre().equals(animacion)) {
+                          a.aumentar();
+                          add = false;
+                      }
+                  }
+                  
+                  if (add) {
+                     usoAnimaciones.add(new AnimacionUsada(animacion));
+                  }
+              }
+          }
 :}
 
 /*Terminales y no terminales*/
@@ -68,14 +101,14 @@ animate ::= ANIMAR OBJETO ANTERIOR PA posx:x COMA posy:y COMA tipoA:ta PC
            :}
            ;
 
-tipoA ::= LINEA:l      {:RESULT = l.getName();:}
-        | CURVA:c      {:RESULT = c.getName();:}
+tipoA ::= LINEA:l      {:RESULT = l.getName();aumentarAnimacionUsada("Linea");:}
+        | CURVA:c      {:RESULT = c.getName();aumentarAnimacionUsada("Curva");:}
         ;
 
 figura ::= CUADRADO:f PA param_s PC         {:RESULT = f.getName();:}
          | CIRCULO:f PA param_c PC          {:RESULT = f.getName();:}
          | RECTANGULO:f PA param_r PC       {:RESULT = f.getName();:}
-         | LINEA:f PA param_l PC            {:RESULT = f.getName();:}
+         | LINEA:f PA param_l PC            {:RESULT = f.getName();usoLinea.aumentar();:}
          | POLIGONO:f PA param_p PC         {:RESULT = f.getName();:}
          ;
 
