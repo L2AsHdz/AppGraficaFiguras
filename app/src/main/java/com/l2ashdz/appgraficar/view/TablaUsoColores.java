@@ -22,7 +22,7 @@ public class TablaUsoColores extends TablaDinamica {
 
     @Override
     public void crearTabla() {
-        crearHeader(new String[]{"Color", "Uso"});
+        crearHeader(new String[]{"Color", "Cant. Usos"});
         agregarFilas();
     }
 

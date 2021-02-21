@@ -18,7 +18,7 @@ public class TablaUsoFiguras extends TablaDinamica {
 
     @Override
     public void crearTabla() {
-        crearHeader(new String[]{"Figura", "Uso"});
+        crearHeader(new String[]{"Figura", "Cant. Usos"});
         agregarFilas();
     }
 

@@ -9,7 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_marginBottom="64dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:id="@+id/reportTitle"
@@ -27,7 +29,7 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fillViewport="true" >
+                android:fillViewport="true">
 
                 <TableLayout
                     android:id="@+id/table"
@@ -35,6 +37,17 @@
                     android:layout_height="match_parent" />
             </HorizontalScrollView>
         </ScrollView>
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_nextReport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:onClick="siguienteReporte"
+        android:text="@string/btn_siguienteReporte"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,4 +11,6 @@
     <string name="report_figuras">Uso de figuras</string>
     <string name="report_animaciones">Uso de animaciones</string>
     <string name="btn_aniamar">Iniciar Animaciones</string>
+    <string name="btn_siguienteReporte">Reporte Siguiente</string>
+    <string name="btn_volverInicio">Volver al inicio</string>
 </resources>

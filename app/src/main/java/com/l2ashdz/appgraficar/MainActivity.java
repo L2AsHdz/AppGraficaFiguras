@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             results.getErrores().forEach(e -> System.out.println(e.getLexema()));
             Intent intent = new Intent(this, ReportesActivity.class);
             intent.putExtra("resultados", results);
+            intent.putExtra("error", true);
             startActivity(intent);
 
         }
