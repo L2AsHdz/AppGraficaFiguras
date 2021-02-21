@@ -26,6 +26,7 @@ import static com.l2ashdz.appgraficar.analizadores.sintactico.sym.*;
     private List<ErrorAnalisis> errores = new ArrayList();
     private List<ColorUsado> usoColores = new ArrayList();
     private List<FiguraUsada> usoFiguras = new ArrayList();
+    private List<String> operadoresYOperandos = new ArrayList();
 
     public List<ErrorAnalisis> getErrores(){
         return this.errores;
@@ -37,6 +38,10 @@ import static com.l2ashdz.appgraficar.analizadores.sintactico.sym.*;
 
     public List<FiguraUsada> getUsoFiguras(){
         return this.usoFiguras;
+    }
+
+    public List<String> getOperadoresYOperandos(){
+        return this.operadoresYOperandos;
     }
   
     private Symbol symbol(String name, int type){
@@ -172,15 +177,43 @@ NUMERO = 0|([1-9][0-9]*)(\.(0|([0-9]*[1-9])))?
 
 <YYINITIAL> {
 
-    "+"                             {return symbol("SUMA", SUMA);}
-    "-"                             {return symbol("RESTA", RESTA);}
-    "*"                             {return symbol("MULTIPLICACION", MULT);}
-    "/"                             {return symbol("DIVISION", DIV);}
-    "("                             {return symbol("PAREN_ABRE", PA);}
-    ")"                             {return symbol("PAREN_CIERRE", PC);}
+    "+"                             {
+                                        operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
+                                        return symbol("SUMA", SUMA);
+                                    }
+                                    
+    "-"                             {
+                                        operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
+                                        return symbol("RESTA", RESTA);
+                                    }
+                                    
+    "*"                             {
+                                        operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
+                                        return symbol("MULTIPLICACION", MULT);
+                                    }
+                                    
+    "/"                             {
+                                        operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
+                                        return symbol("DIVISION", DIV);
+                                    }
+                                    
+    "("                             {
+                                        operadoresYOperandos.add(yytext());
+                                        return symbol("PAREN_ABRE", PA);
+                                    }
+                                    
+    ")"                             {
+                                        operadoresYOperandos.add(yytext());
+                                        return symbol("PAREN_CIERRE", PC);
+                                    }
+                                    
     ","                             {return symbol("COMA", COMA);}
+                                    
 
-    {NUMERO}                        {return symbol("NUMERO", NUMERO, yytext());}
+    {NUMERO}                        {
+                                        operadoresYOperandos.add(yytext());
+                                        return symbol("NUMERO", NUMERO, yytext());
+                                    }
     {ESPACIO}                       {/*Ignorar*/}
 
 }
