@@ -358,13 +358,9 @@ public class Lexer implements java_cup.runtime.Scanner {
     public List<String> getOperadoresYOperandos(){
         return this.operadoresYOperandos;
     }
-  
-    private Symbol symbol(String name, int type){
-        return new Symbol(type, new Token(name, yyline, yycolumn));
-    }
 
-    private Symbol symbol(String name, int type, String lexema){
-        return new Symbol(type, new Token(name, yyline, yycolumn, lexema));
+    private Symbol symbol(int type){
+        return new Symbol(type, new Token(yyline, yycolumn, yytext()));
     }
 
     private void addLexicError(){
@@ -813,7 +809,8 @@ public class Lexer implements java_cup.runtime.Scanner {
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
             zzDoEOF();
-          { return new java_cup.runtime.Symbol(sym.EOF); }
+          {     return new Symbol(EOF, new Token(-1,-1, "Fin de linea"));
+ }
       }
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
@@ -829,150 +826,150 @@ public class Lexer implements java_cup.runtime.Scanner {
           case 30: break;
           case 3:
             { operadoresYOperandos.add(yytext());
-                                        return symbol("PAREN_ABRE", PA);
+                                        return symbol(PAREN_APERTURA);
             }
             // fall through
           case 31: break;
           case 4:
             { operadoresYOperandos.add(yytext());
-                                        return symbol("PAREN_CIERRE", PC);
+                                        return symbol(PAREN_CIERRE);
             }
             // fall through
           case 32: break;
           case 5:
             { operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
-                                        return symbol("MULTIPLICACION", MULT);
+                                        return symbol(MULTIPLICACION);
             }
             // fall through
           case 33: break;
           case 6:
             { operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
-                                        return symbol("SUMA", SUMA);
+                                        return symbol(SUMA);
             }
             // fall through
           case 34: break;
           case 7:
-            { return symbol("COMA", COMA);
+            { return symbol(COMA);
             }
             // fall through
           case 35: break;
           case 8:
             { operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
-                                        return symbol("RESTA", RESTA);
+                                        return symbol(RESTA);
             }
             // fall through
           case 36: break;
           case 9:
             { operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
-                                        return symbol("DIVISION", DIV);
+                                        return symbol(DIVISION);
             }
             // fall through
           case 37: break;
           case 10:
             { operadoresYOperandos.add(yytext());
-                                        return symbol("NUMERO", NUMERO, yytext());
+                                        return symbol(NUMERO);
             }
             // fall through
           case 38: break;
           case 11:
             { aumentarColorUsado("Azul");
-                                        return symbol("AZUL", AZUL);
+                                        return symbol(AZUL);
             }
             // fall through
           case 39: break;
           case 12:
             { aumentarColorUsado("Cafe");
-                                        return symbol("CAFE", CAFE);
+                                        return symbol(CAFE);
             }
             // fall through
           case 40: break;
           case 13:
             { aumentarColorUsado("Rojo");
-                                        return symbol("ROJO", ROJO);
+                                        return symbol(ROJO);
             }
             // fall through
           case 41: break;
           case 14:
-            { return symbol("CURVA", CURVA);
+            { return symbol(CURVA);
             }
             // fall through
           case 42: break;
           case 15:
-            { return symbol("LINEA", LINEA);
+            { return symbol(LINEA);
             }
             // fall through
           case 43: break;
           case 16:
             { aumentarColorUsado("Negro");
-                                        return symbol("NEGRO", NEGRO);
+                                        return symbol(NEGRO);
             }
             // fall through
           case 44: break;
           case 17:
             { aumentarColorUsado("Verde");
-                                        return symbol("VERDE", VERDE);
+                                        return symbol(VERDE);
             }
             // fall through
           case 45: break;
           case 18:
-            { return symbol("ANIMAR", ANIMAR);
+            { return symbol(ANIMAR);
             }
             // fall through
           case 46: break;
           case 19:
             { aumentarColorUsado("Morado");
-                                        return symbol("MORADO", MORADO);
+                                        return symbol(MORADO);
             }
             // fall through
           case 47: break;
           case 20:
-            { return symbol("OBJETO", OBJETO);
+            { return symbol(OBJETO);
             }
             // fall through
           case 48: break;
           case 21:
             { aumentarFiguraUsada("Circulo");
-                                        return symbol("CIRCULO", CIRCULO);
+                                        return symbol(CIRCULO);
             }
             // fall through
           case 49: break;
           case 22:
             { aumentarColorUsado("Naranja");
-                                        return symbol("NARANJA", NARANJA);
+                                        return symbol(NARANJA);
             }
             // fall through
           case 50: break;
           case 23:
             { aumentarColorUsado("Amarillo");
-                                        return symbol("AMARILLO", AMARILLO);
+                                        return symbol(AMARILLO);
             }
             // fall through
           case 51: break;
           case 24:
-            { return symbol("ANTERIOR", ANTERIOR);
+            { return symbol(ANTERIOR);
             }
             // fall through
           case 52: break;
           case 25:
             { aumentarFiguraUsada("Cuadrado");
-                                        return symbol("CUADRADO", CUADRADO);
+                                        return symbol(CUADRADO);
             }
             // fall through
           case 53: break;
           case 26:
-            { return symbol("GRAFICAR", GRAFICAR);
+            { return symbol(GRAFICAR);
             }
             // fall through
           case 54: break;
           case 27:
             { aumentarFiguraUsada("Poligono");
-                                        return symbol("POLIGONO", POLIGONO);
+                                        return symbol(POLIGONO);
             }
             // fall through
           case 55: break;
           case 28:
             { aumentarFiguraUsada("Rectangulo");
-                                        return symbol("RECTANGULO", RECTANGULO);
+                                        return symbol(RECTANGULO);
             }
             // fall through
           case 56: break;

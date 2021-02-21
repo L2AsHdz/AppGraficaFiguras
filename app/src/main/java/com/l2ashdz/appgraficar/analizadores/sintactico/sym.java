@@ -9,28 +9,28 @@ package com.l2ashdz.appgraficar.analizadores.sintactico;
 public class sym {
   /* terminals */
   public static final int LINEA = 10;
+  public static final int MULTIPLICACION = 22;
+  public static final int DIVISION = 23;
   public static final int SUMA = 20;
   public static final int CURVA = 6;
   public static final int ANIMAR = 3;
   public static final int CAFE = 19;
+  public static final int PAREN_APERTURA = 24;
   public static final int CUADRADO = 8;
   public static final int OBJETO = 4;
   public static final int VERDE = 15;
   public static final int ROJO = 14;
+  public static final int PAREN_CIERRE = 25;
   public static final int GRAFICAR = 2;
   public static final int AMARILLO = 16;
   public static final int COMA = 26;
-  public static final int MULT = 22;
   public static final int EOF = 0;
-  public static final int DIV = 23;
   public static final int MORADO = 18;
   public static final int NUMERO = 27;
   public static final int error = 1;
   public static final int POLIGONO = 11;
   public static final int CIRCULO = 7;
   public static final int AZUL = 13;
-  public static final int PC = 25;
-  public static final int PA = 24;
   public static final int ANTERIOR = 5;
   public static final int NEGRO = 12;
   public static final int NARANJA = 17;
@@ -59,10 +59,10 @@ public class sym {
   "CAFE",
   "SUMA",
   "RESTA",
-  "MULT",
-  "DIV",
-  "PA",
-  "PC",
+  "MULTIPLICACION",
+  "DIVISION",
+  "PAREN_APERTURA",
+  "PAREN_CIERRE",
   "COMA",
   "NUMERO"
   };

@@ -6,30 +6,14 @@ package com.l2ashdz.appgraficar.model;
  */
 public class Token {
 
-    private String name;
     private int linea;
     private int columna;
     private String lexema;
 
-    public Token(String name, int linea, int columna, String lexema) {
-        this.name = name;
+    public Token(int linea, int columna, String lexema) {
         this.linea = linea + 1;
         this.columna = columna + 1;
         this.lexema = lexema;
-    }
-
-    public Token(String name, int linea, int columna) {
-        this.name = name;
-        this.linea = linea + 1;
-        this.columna = columna + 1;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getLinea() {

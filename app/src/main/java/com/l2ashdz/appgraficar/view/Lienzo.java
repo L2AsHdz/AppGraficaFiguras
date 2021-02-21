@@ -121,22 +121,22 @@ public class Lienzo extends View {
 
     private Paint setPincel(String color) {
         switch (color) {
-            case "ROJO":
+            case "rojo":
             default:
                 return nuevoPincel(Color.RED);
-            case "AZUL":
+            case "azul":
                 return nuevoPincel(Color.BLUE);
-            case "AMARILLO":
+            case "amarillo":
                 return nuevoPincel(Color.YELLOW);
-            case "CAFE":
+            case "cafe":
                 return nuevoPincel(Color.rgb(153, 102, 51));
-            case "NEGRO":
+            case "negro":
                 return nuevoPincel(Color.BLACK);
-            case "NARANJA":
+            case "naranja":
                 return nuevoPincel(Color.rgb(255, 128, 0));
-            case "VERDE":
+            case "verde":
                 return nuevoPincel(Color.GREEN);
-            case "MORADO":
+            case "morado":
                 return nuevoPincel(Color.rgb(153, 0, 204));
         }
     }
