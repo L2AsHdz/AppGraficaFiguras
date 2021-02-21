@@ -84,7 +84,7 @@ terminal Token      NEGRO, AZUL, ROJO, VERDE, AMARILLO, NARANJA, MORADO, CAFE;
 terminal Token      SUMA, RESTA, MULTIPLICACION, DIVISION, PAREN_APERTURA, PAREN_CIERRE, COMA;
 terminal Token      NUMERO;
 
-non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color, animate, tipoA;
+non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color, animate, tipoA, othersAnim, ignoreAnim;
 non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados, expr;
 
 //Precedencias
@@ -99,10 +99,16 @@ nose ::= graph
 
 graph ::= GRAFICAR figura
         | GRAFICAR figura animate
+        | GRAFICAR figura animate othersAnim
 
         | error                        {:System.out.println("Error, estructura incorrecta");:}
         ;
-//Agrgar opcion para ognorar cuando vienen varias estructuras animar seguidas
+
+othersAnim ::= ignoreAnim
+             | ignoreAnim othersAnim;
+
+ignoreAnim ::= ANIMAR OBJETO ANTERIOR PAREN_APERTURA posx COMA posy COMA tipoA PAREN_CIERRE;
+
 animate ::= ANIMAR OBJETO ANTERIOR PAREN_APERTURA posx:x COMA posy:y COMA tipoA:ta PAREN_CIERRE 
            {:
               animaciones.add(new Animacion(figurasAGraficar.get(figurasAGraficar.size()-1), x, y, ta.toString()));
