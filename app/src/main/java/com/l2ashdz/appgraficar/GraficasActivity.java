@@ -19,6 +19,7 @@ public class GraficasActivity extends AppCompatActivity {
     Resultados results;
     Lienzo lienzo;
     Button btnReportes;
+    Button btnAnimar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +28,15 @@ public class GraficasActivity extends AppCompatActivity {
 
         results = (Resultados) getIntent().getSerializableExtra("resultados");
 
+        btnAnimar = findViewById(R.id.btn_Animar);
+        btnReportes = findViewById(R.id.verReportes);
         cLayout = findViewById(R.id.cLayout);
         lienzo = new Lienzo(this, results.getFiguras(), results.getAnimaciones(), false);
         cLayout.addView(lienzo);
+        if (results.getAnimaciones().isEmpty()){
+            btnAnimar.setEnabled(false);
+            btnReportes.setEnabled(true);
+        }
     }
 
     public void ejecutarAnimaciones(View view) {
@@ -37,7 +44,6 @@ public class GraficasActivity extends AppCompatActivity {
         lienzo = new Lienzo(this, results.getFiguras(), results.getAnimaciones(), true);
         cLayout.addView(lienzo);
 
-        btnReportes = findViewById(R.id.verReportes);
         btnReportes.setEnabled(true);
         view.setEnabled(false);
     }
