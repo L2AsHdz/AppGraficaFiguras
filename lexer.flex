@@ -43,13 +43,9 @@ import static com.l2ashdz.appgraficar.analizadores.sintactico.sym.*;
     public List<String> getOperadoresYOperandos(){
         return this.operadoresYOperandos;
     }
-  
-    private Symbol symbol(String name, int type){
-        return new Symbol(type, new Token(name, yyline, yycolumn));
-    }
 
-    private Symbol symbol(String name, int type, String lexema){
-        return new Symbol(type, new Token(name, yyline, yycolumn, lexema));
+    private Symbol symbol(int type){
+        return new Symbol(type, new Token(yyline, yycolumn, yytext()));
     }
 
     private void addLexicError(){
@@ -97,6 +93,10 @@ import static com.l2ashdz.appgraficar.analizadores.sintactico.sym.*;
 
 %}
 
+%eofval{
+    return new Symbol(EOF, new Token(-1,-1, "Fin de linea"));
+%eofval}
+
 SALTO = \n|\r|\r\n
 ESPACIO = {SALTO} | [ \t\f]
 NUMERO = 0|([1-9][0-9]*)(\.(0|([0-9]*[1-9])))?
@@ -104,74 +104,74 @@ NUMERO = 0|([1-9][0-9]*)(\.(0|([0-9]*[1-9])))?
 %%
 
 //Palabras reservadas
-<YYINITIAL> "graficar"              {return symbol("GRAFICAR", GRAFICAR);}
-<YYINITIAL> "animar"                {return symbol("ANIMAR", ANIMAR);}
-<YYINITIAL> "objeto"                {return symbol("OBJETO", OBJETO);}
-<YYINITIAL> "anterior"              {return symbol("ANTERIOR", ANTERIOR);}
-<YYINITIAL> "curva"                 {return symbol("CURVA", CURVA);}
+<YYINITIAL> "graficar"              {return symbol(GRAFICAR);}
+<YYINITIAL> "animar"                {return symbol(ANIMAR);}
+<YYINITIAL> "objeto"                {return symbol(OBJETO);}
+<YYINITIAL> "anterior"              {return symbol(ANTERIOR);}
+<YYINITIAL> "curva"                 {return symbol(CURVA);}
 
 //Figuras
 <YYINITIAL> "circulo"               {
                                         aumentarFiguraUsada("Circulo");
-                                        return symbol("CIRCULO", CIRCULO);
+                                        return symbol(CIRCULO);
                                     }
 
 <YYINITIAL> "cuadrado"              {
                                         aumentarFiguraUsada("Cuadrado");
-                                        return symbol("CUADRADO", CUADRADO);
+                                        return symbol(CUADRADO);
                                     }
                                     
 <YYINITIAL> "rectangulo"            {
                                         aumentarFiguraUsada("Rectangulo");
-                                        return symbol("RECTANGULO", RECTANGULO);
+                                        return symbol(RECTANGULO);
                                     }
 
-<YYINITIAL> "linea"                 {return symbol("LINEA", LINEA);}
+<YYINITIAL> "linea"                 {return symbol(LINEA);}
 
 <YYINITIAL> "poligono"              {
                                         aumentarFiguraUsada("Poligono");
-                                        return symbol("POLIGONO", POLIGONO);
+                                        return symbol(POLIGONO);
                                     }
 
 //Colores
 <YYINITIAL> "negro"                 {
                                         aumentarColorUsado("Negro");
-                                        return symbol("NEGRO", NEGRO);
+                                        return symbol(NEGRO);
                                     }
 
 <YYINITIAL> "azul"                  {
                                         aumentarColorUsado("Azul");
-                                        return symbol("AZUL", AZUL);
+                                        return symbol(AZUL);
                                     }
 
 <YYINITIAL> "rojo"                  {
                                         aumentarColorUsado("Rojo");
-                                        return symbol("ROJO", ROJO);
+                                        return symbol(ROJO);
                                     }
                                     
 <YYINITIAL> "verde"                 {
                                         aumentarColorUsado("Verde");
-                                        return symbol("VERDE", VERDE);
+                                        return symbol(VERDE);
                                     }
 
 <YYINITIAL> "amarillo"              {
                                         aumentarColorUsado("Amarillo");
-                                        return symbol("AMARILLO", AMARILLO);
+                                        return symbol(AMARILLO);
                                     }
 
 <YYINITIAL> "naranja"               {
                                         aumentarColorUsado("Naranja");
-                                        return symbol("NARANJA", NARANJA);
+                                        return symbol(NARANJA);
                                     }
 
 <YYINITIAL> "morado"                {
                                         aumentarColorUsado("Morado");
-                                        return symbol("MORADO", MORADO);
+                                        return symbol(MORADO);
                                     }
 
 <YYINITIAL> "cafe"                  {
                                         aumentarColorUsado("Cafe");
-                                        return symbol("CAFE", CAFE);
+                                        return symbol(CAFE);
                                     }
 
 
@@ -179,40 +179,40 @@ NUMERO = 0|([1-9][0-9]*)(\.(0|([0-9]*[1-9])))?
 
     "+"                             {
                                         operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
-                                        return symbol("SUMA", SUMA);
+                                        return symbol(SUMA);
                                     }
                                     
     "-"                             {
                                         operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
-                                        return symbol("RESTA", RESTA);
+                                        return symbol(RESTA);
                                     }
                                     
     "*"                             {
                                         operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
-                                        return symbol("MULTIPLICACION", MULT);
+                                        return symbol(MULTIPLICACION);
                                     }
                                     
     "/"                             {
                                         operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
-                                        return symbol("DIVISION", DIV);
+                                        return symbol(DIVISION);
                                     }
                                     
     "("                             {
                                         operadoresYOperandos.add(yytext());
-                                        return symbol("PAREN_ABRE", PA);
+                                        return symbol(PAREN_APERTURA);
                                     }
                                     
     ")"                             {
                                         operadoresYOperandos.add(yytext());
-                                        return symbol("PAREN_CIERRE", PC);
+                                        return symbol(PAREN_CIERRE);
                                     }
                                     
-    ","                             {return symbol("COMA", COMA);}
+    ","                             {return symbol(COMA);}
                                     
 
     {NUMERO}                        {
                                         operadoresYOperandos.add(yytext());
-                                        return symbol("NUMERO", NUMERO, yytext());
+                                        return symbol(NUMERO);
                                     }
     {ESPACIO}                       {/*Ignorar*/}
 

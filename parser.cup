@@ -44,9 +44,9 @@ parser code {:
        public void syntax_error(Symbol s){
               Token t = (Token) s.value;
               StringBuilder descripcion = new StringBuilder("Se esperaba: ");
-              expected_token_ids().forEach(x -> descripcion.append(symbl_name_from_id(x)).append(" "));
+              expected_token_ids().forEach(x -> descripcion.append(symbl_name_from_id(x)).append(", "));
               //report_error("Error sintactico en tonken: "+t.getName()+", en la linea: "+t.getLinea()+" y columna: "+t.getColumna()+", intentado recuperarse", cur_token);
-              errores.add(new ErrorAnalisis(t.getName(), t.getLinea(), t.getColumna(), TipoError.SINTACTICO, descripcion.toString()));
+              errores.add(new ErrorAnalisis(t.getLexema(), t.getLinea(), t.getColumna(), TipoError.SINTACTICO, descripcion.toString()));
        }
 
        private void aumentarAnimacionUsada(String animacion){
@@ -73,7 +73,7 @@ parser code {:
 terminal Token      GRAFICAR, ANIMAR, OBJETO, ANTERIOR, CURVA;
 terminal Token      CIRCULO, CUADRADO, RECTANGULO, LINEA, POLIGONO;
 terminal Token      NEGRO, AZUL, ROJO, VERDE, AMARILLO, NARANJA, MORADO, CAFE;
-terminal Token      SUMA, RESTA, MULT, DIV, PA, PC, COMA;
+terminal Token      SUMA, RESTA, MULTIPLICACION, DIVISION, PAREN_APERTURA, PAREN_CIERRE, COMA;
 terminal Token      NUMERO;
 
 non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color, animate, tipoA;
@@ -81,7 +81,7 @@ non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados, expr;
 
 //Precedencias
 precedence left SUMA, RESTA;
-precedence left MULT, DIV;
+precedence left MULTIPLICACION, DIVISION;
 
 /*Gramatica*/
 
@@ -92,24 +92,24 @@ nose ::= graph
 graph ::= GRAFICAR figura
         | GRAFICAR figura animate
 
-        | error PC                        {:System.out.println("Error, estructura incorrecta");:}
+        | error                        {:System.out.println("Error, estructura incorrecta");:}
         ;
 //Agrgar opcion para ognorar cuando vienen varias estructuras animar seguidas
-animate ::= ANIMAR OBJETO ANTERIOR PA posx:x COMA posy:y COMA tipoA:ta PC 
+animate ::= ANIMAR OBJETO ANTERIOR PAREN_APERTURA posx:x COMA posy:y COMA tipoA:ta PAREN_CIERRE 
            {:
               animaciones.add(new Animacion(figurasAGraficar.get(figurasAGraficar.size()-1), x, y, ta.toString()));
            :}
            ;
 
-tipoA ::= LINEA:l      {:RESULT = l.getName();aumentarAnimacionUsada("Linea");:}
-        | CURVA:c      {:RESULT = c.getName();aumentarAnimacionUsada("Curva");:}
+tipoA ::= LINEA:l      {:RESULT = l.getLexema();aumentarAnimacionUsada("Linea");:}
+        | CURVA:c      {:RESULT = c.getLexema();aumentarAnimacionUsada("Curva");:}
         ;
 
-figura ::= CUADRADO:f PA param_s PC         {:RESULT = f.getName();:}
-         | CIRCULO:f PA param_c PC          {:RESULT = f.getName();:}
-         | RECTANGULO:f PA param_r PC       {:RESULT = f.getName();:}
-         | LINEA:f PA param_l PC            {:RESULT = f.getName();usoLinea.aumentar();:}
-         | POLIGONO:f PA param_p PC         {:RESULT = f.getName();:}
+figura ::= CUADRADO:f PAREN_APERTURA param_s PAREN_CIERRE  
+         | CIRCULO:f PAREN_APERTURA param_c PAREN_CIERRE   
+         | RECTANGULO:f PAREN_APERTURA param_r PAREN_CIERRE
+         | LINEA:f PAREN_APERTURA param_l PAREN_CIERRE            {:usoLinea.aumentar();:}
+         | POLIGONO:f PAREN_APERTURA param_p PAREN_CIERRE  
          ;
 
 param_s ::= posx:x COMA posy:y COMA lado:l COMA color:c
@@ -163,24 +163,24 @@ ancho ::= expr:n        {:RESULT = n;:}
 cant_lados ::= expr:n        {:RESULT = n;:}
              ;
        
-color ::= NEGRO:c      {:RESULT = c.getName();:}
-        | AZUL:c       {:RESULT = c.getName();:}
-        | ROJO:c       {:RESULT = c.getName();:}
-        | VERDE:c      {:RESULT = c.getName();:}
-        | AMARILLO:c   {:RESULT = c.getName();:}
-        | NARANJA:c    {:RESULT = c.getName();:}
-        | MORADO:c     {:RESULT = c.getName();:}
-        | CAFE:c       {:RESULT = c.getName();:}
+color ::= NEGRO:c      {:RESULT = c.getLexema();:}
+        | AZUL:c       {:RESULT = c.getLexema();:}
+        | ROJO:c       {:RESULT = c.getLexema();:}
+        | VERDE:c      {:RESULT = c.getLexema();:}
+        | AMARILLO:c   {:RESULT = c.getLexema();:}
+        | NARANJA:c    {:RESULT = c.getLexema();:}
+        | MORADO:c     {:RESULT = c.getLexema();:}
+        | CAFE:c       {:RESULT = c.getLexema();:}
         ;
 
-expr ::= expr:e1 SUMA expr:e2          {:RESULT = e1 + e2;:}
-       | expr:e1 RESTA expr:e2         {:RESULT = e1 - e2;:}
-       | expr:e1 MULT expr:e2          {:RESULT = e1 * e2;:}
-       | expr:e1 DIV expr:e2           {:RESULT = e1 / e2;:}
-       | PA expr:e PC                  {:RESULT = e;:}
-       | PA expr:e1 PC SUMA expr:e2    {:RESULT = e1 + e2;:} 
-       | PA expr:e1 PC RESTA expr:e2   {:RESULT = e1 - e2;:} 
-       | PA expr:e1 PC MULT expr:e2    {:RESULT = e1 * e2;:} 
-       | PA expr:e1 PC DIV expr:e2     {:RESULT = e1 / e2;:} 
-       | NUMERO:n                      {:RESULT = n.getNumero();:}
+expr ::= expr:e1 SUMA expr:e2                                          {:RESULT = e1 + e2;:}
+       | expr:e1 RESTA expr:e2                                         {:RESULT = e1 - e2;:}
+       | expr:e1 MULTIPLICACION expr:e2                                {:RESULT = e1 * e2;:}
+       | expr:e1 DIVISION expr:e2                                      {:RESULT = e1 / e2;:}
+       | PAREN_APERTURA expr:e PAREN_CIERRE                            {:RESULT = e;:}
+       | PAREN_APERTURA expr:e1 PAREN_CIERRE SUMA expr:e2              {:RESULT = e1 + e2;:} 
+       | PAREN_APERTURA expr:e1 PAREN_CIERRE RESTA expr:e2             {:RESULT = e1 - e2;:} 
+       | PAREN_APERTURA expr:e1 PAREN_CIERRE MULTIPLICACION expr:e2    {:RESULT = e1 * e2;:} 
+       | PAREN_APERTURA expr:e1 PAREN_CIERRE DIVISION expr:e2          {:RESULT = e1 / e2;:} 
+| NUMERO:n                                                             {:RESULT = n.getNumero();:}
        ;
