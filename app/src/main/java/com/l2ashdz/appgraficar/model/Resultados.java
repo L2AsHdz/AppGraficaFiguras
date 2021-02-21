@@ -31,7 +31,10 @@ public class Resultados implements Serializable {
 
         usoColores = lexer.getUsoColores();
         usoFiguras = lexer.getUsoFiguras();
-        usoFiguras.add(parser.getUsoLinea());
+        if (parser.getUsoLinea() != null) {
+            usoFiguras.add(parser.getUsoLinea());
+        }
+
         figuras = parser.getFiguras();
         animaciones = parser.getAnimaciones();
         usoAnimaciones = parser.getUsoAnimaciones();
