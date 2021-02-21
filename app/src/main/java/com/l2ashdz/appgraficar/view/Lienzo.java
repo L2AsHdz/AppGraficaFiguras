@@ -24,6 +24,7 @@ public class Lienzo extends View {
 
     private List<Figura> figurasAGraficar;
     private List<Animacion> animaciones;
+    private boolean executeAnimations;
     private float xtemp = -1;
     private float ytemp = -1;
     private float pendiente;
@@ -33,10 +34,11 @@ public class Lienzo extends View {
     private float radio;
     private int index = 0;
 
-    public Lienzo(Context context, List<Figura> figurasAGrraficar, List<Animacion> animaciones) {
+    public Lienzo(Context context, List<Figura> figurasAGrraficar, List<Animacion> animaciones, boolean executeAnimations) {
         super(context);
         this.figurasAGraficar = figurasAGrraficar;
         this.animaciones = animaciones;
+        this.executeAnimations = executeAnimations;
     }
 
     @Override
@@ -63,7 +65,7 @@ public class Lienzo extends View {
             }
         });
 
-        if (!animaciones.isEmpty()) {
+        if (executeAnimations & !animaciones.isEmpty()) {
             Figura f = animaciones.get(index).getFigura();
             Paint pincel = setPincel(f.getColor());
 
@@ -223,10 +225,8 @@ public class Lienzo extends View {
             xtemp = (distX < 0) ? xtemp - 1 : xtemp + 1;
             ytemp = calcularYCurva(xtemp);
         } else if (distX != 0 && distY != 0) {
-            System.out.println("X: " + xtemp + "Y: " + ytemp);
             xtemp = (distX < 0) ? xtemp - 1 : xtemp + 1;
             ytemp = calcularYCurva(xtemp);
-            System.out.println("+X: " + xtemp + "Y: " + ytemp);
         } else {
             //No hacer nada
         }
