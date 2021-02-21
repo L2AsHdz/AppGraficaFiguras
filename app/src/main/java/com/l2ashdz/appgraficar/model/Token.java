@@ -11,15 +11,15 @@ public class Token {
     private int columna;
     private String lexema;
 
-    public Token(String id, int linea, int columna, String lexema) {
-        this.name = id;
+    public Token(String name, int linea, int columna, String lexema) {
+        this.name = name;
         this.linea = linea + 1;
         this.columna = columna + 1;
         this.lexema = lexema;
     }
 
-    public Token(String id, int linea, int columna) {
-        this.name = id;
+    public Token(String name, int linea, int columna) {
+        this.name = name;
         this.linea = linea + 1;
         this.columna = columna + 1;
     }
@@ -64,7 +64,4 @@ public class Token {
         return numero;
     }
 
-    public void setLexema(String valor) {
-        this.lexema = valor;
-    }
 }

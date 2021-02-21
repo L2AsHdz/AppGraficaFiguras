@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.l2ashdz.appgraficar.analizadores.lexico.Lexer;
 import com.l2ashdz.appgraficar.analizadores.sintactico.Parser;
 import com.l2ashdz.appgraficar.model.Resultados;
+import com.l2ashdz.appgraficar.view.TablaDinamica;
+import com.l2ashdz.appgraficar.view.TablaErrores;
 
 import java.io.StringReader;
 
@@ -50,15 +53,17 @@ public class MainActivity extends AppCompatActivity {
         Resultados results = new Resultados(lexer, parser);
 
         if(results.getErrores().isEmpty()){
-            /*Intent intent = new Intent(this, GraficasActivity.class);
+            Intent intent = new Intent(this, GraficasActivity.class);
             intent.putExtra("resultados", results);
-            startActivity(intent);*/
-            results.getOcurrencias().forEach(o -> {
-                System.out.println(o.getOperador() + " | " + o.getLinea() + " | " + o.getColumna() + " | " + o.getOcurrencia());
-            });
+            startActivity(intent);
         } else {
             //reporte de errores
-            Toast.makeText(getApplicationContext(), "Hay errores perro", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Hay errores perro", Toast.LENGTH_SHORT).show();
+            results.getErrores().forEach(e -> System.out.println(e.getLexema()));
+            Intent intent = new Intent(this, ReportesActivity.class);
+            intent.putExtra("resultados", results);
+            startActivity(intent);
+
         }
 
     }

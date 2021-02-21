@@ -63,57 +63,58 @@ public class Lienzo extends View {
             }
         });
 
+        if (!animaciones.isEmpty()) {
+            Figura f = animaciones.get(index).getFigura();
+            Paint pincel = setPincel(f.getColor());
 
-        Figura f = animaciones.get(index).getFigura();
-        Paint pincel = setPincel(f.getColor());
-
-        if (xtemp == -1 & ytemp == -1) {
-            xtemp = f.getPosx();
-            ytemp = f.getPosy();
-        }
-        figurasAGraficar.remove(f);
-
-        if (f instanceof Circulo) {
-            Circulo c = (Circulo) f;
-            canvas.drawCircle(xtemp, ytemp, c.getRadio(), pincel);
-        } else if (f instanceof Cuadrado) {
-            Cuadrado c = (Cuadrado) f;
-            canvas.drawRect(xtemp, ytemp, xtemp + c.getLado(), ytemp + c.getLado(), pincel);
-        } else if (f instanceof Rectangulo) {
-            Rectangulo r = (Rectangulo) f;
-            canvas.drawRect(xtemp, ytemp, xtemp + r.getAncho(), ytemp + r.getAlto(), pincel);
-        } else if (f instanceof Linea) {
-            Linea l = (Linea) f;
-            canvas.drawLine(xtemp, ytemp, xtemp + (l.getPosx2() - l.getPosx()), ytemp + (l.getPosy2() - l.getPosy()), pincel);
-        } else if (f instanceof Poligono) {
-            Poligono p = (Poligono) f;
-        }
-
-        if (animaciones.get(index).getTipoAnimacion().equalsIgnoreCase("linea")) {
-            calcularPosicionesLinea(f.getPosx(), f.getPosy(), animaciones.get(index).getPosx(), animaciones.get(index).getPosy());
-        } else {
-            calcularPosicionesCurva(f.getPosx(), f.getPosy(), animaciones.get(index).getPosx(), animaciones.get(index).getPosy());
-        }
-
-
-        if (xtemp != animaciones.get(index).getPosx() | ytemp != animaciones.get(index).getPosy()) {
-            invalidate();
-        } else {
-            f.setPosx(xtemp);
-            f.setPosy(ytemp);
-
-            if (f instanceof Linea) {
-                Linea l = (Linea) f;
-                l.setPosx2(xtemp + (l.getPosx2() - l.getPosx()));
-                l.setPosy2(ytemp + (l.getPosy2() - l.getPosy()));
+            if (xtemp == -1 & ytemp == -1) {
+                xtemp = f.getPosx();
+                ytemp = f.getPosy();
             }
-            figurasAGraficar.add(f);
+            figurasAGraficar.remove(f);
 
-            xtemp = -1;
-            ytemp = -1;
-            if (index < animaciones.size() - 1) {
-                index++;
+            if (f instanceof Circulo) {
+                Circulo c = (Circulo) f;
+                canvas.drawCircle(xtemp, ytemp, c.getRadio(), pincel);
+            } else if (f instanceof Cuadrado) {
+                Cuadrado c = (Cuadrado) f;
+                canvas.drawRect(xtemp, ytemp, xtemp + c.getLado(), ytemp + c.getLado(), pincel);
+            } else if (f instanceof Rectangulo) {
+                Rectangulo r = (Rectangulo) f;
+                canvas.drawRect(xtemp, ytemp, xtemp + r.getAncho(), ytemp + r.getAlto(), pincel);
+            } else if (f instanceof Linea) {
+                Linea l = (Linea) f;
+                canvas.drawLine(xtemp, ytemp, xtemp + (l.getPosx2() - l.getPosx()), ytemp + (l.getPosy2() - l.getPosy()), pincel);
+            } else if (f instanceof Poligono) {
+                Poligono p = (Poligono) f;
+            }
+
+            if (animaciones.get(index).getTipoAnimacion().equalsIgnoreCase("linea")) {
+                calcularPosicionesLinea(f.getPosx(), f.getPosy(), animaciones.get(index).getPosx(), animaciones.get(index).getPosy());
+            } else {
+                calcularPosicionesCurva(f.getPosx(), f.getPosy(), animaciones.get(index).getPosx(), animaciones.get(index).getPosy());
+            }
+
+
+            if (xtemp != animaciones.get(index).getPosx() | ytemp != animaciones.get(index).getPosy()) {
                 invalidate();
+            } else {
+                f.setPosx(xtemp);
+                f.setPosy(ytemp);
+
+                if (f instanceof Linea) {
+                    Linea l = (Linea) f;
+                    l.setPosx2(xtemp + (l.getPosx2() - l.getPosx()));
+                    l.setPosy2(ytemp + (l.getPosy2() - l.getPosy()));
+                }
+                figurasAGraficar.add(f);
+
+                xtemp = -1;
+                ytemp = -1;
+                if (index < animaciones.size() - 1) {
+                    index++;
+                    invalidate();
+                }
             }
         }
     }

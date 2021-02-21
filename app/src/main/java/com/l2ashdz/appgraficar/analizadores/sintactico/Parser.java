@@ -270,7 +270,7 @@ public class Parser extends java_cup.runtime.lr_parser {
               StringBuilder descripcion = new StringBuilder("Se esperaba: ");
               expected_token_ids().forEach(x -> descripcion.append(symbl_name_from_id(x)).append(" "));
               //report_error("Error sintactico en tonken: "+t.getName()+", en la linea: "+t.getLinea()+" y columna: "+t.getColumna()+", intentado recuperarse", cur_token);
-              errores.add(new ErrorAnalisis(t.getName(), t.getLinea(), t.getColumna(), TipoError.SINTACTICO, descripcion.toString()));
+              errores.add(new ErrorAnalisis(t.getLexema(), t.getLinea(), t.getColumna(), TipoError.SINTACTICO, descripcion.toString()));
        }
 
        private void aumentarAnimacionUsada(String animacion){

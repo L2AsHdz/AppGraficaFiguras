@@ -6,4 +6,9 @@
     <string name="btn_back">Regresar</string>
     <string name="btn_reporte">Ver Reportes</string>
     <string name="report_colores">Uso de colores</string>
+    <string name="report_errores">Reporte de errores</string>
+    <string name="report_ocurrencias">Ocurrencias de operadores</string>
+    <string name="report_figuras">Uso de figuras</string>
+    <string name="report_animaciones">Uso de animaciones</string>
+    <string name="btn_aniamar">Iniciar Animaciones</string>
 </resources>

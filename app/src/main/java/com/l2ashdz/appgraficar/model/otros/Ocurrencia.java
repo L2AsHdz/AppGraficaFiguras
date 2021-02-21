@@ -1,6 +1,8 @@
 package com.l2ashdz.appgraficar.model.otros;
 
-public class Ocurrencia {
+import java.io.Serializable;
+
+public class Ocurrencia implements Serializable {
 
     private String operador;
     private String linea;
