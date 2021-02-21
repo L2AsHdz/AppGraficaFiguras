@@ -19,7 +19,7 @@ parser code {:
        private List<Figura> figurasAGraficar = new ArrayList();
        private List<Animacion> animaciones = new ArrayList();
        private List<AnimacionUsada> usoAnimaciones = new ArrayList();
-       private FiguraUsada usoLinea = new FiguraUsada("Linea");
+       private FiguraUsada usoLinea;
 
        public List<ErrorAnalisis> getErrores(){
               return this.errores;
@@ -66,7 +66,15 @@ parser code {:
                      usoAnimaciones.add(new AnimacionUsada(animacion));
                   }
               }
-          }
+       }
+
+       private void aumentarUsoLinea(){
+              if (usoLinea == null){
+                     usoLinea = new FiguraUsada("Linea");
+              } else {
+                     usoLinea.aumentar();
+              }
+       }
 :}
 
 /*Terminales y no terminales*/
@@ -108,7 +116,7 @@ tipoA ::= LINEA:l      {:RESULT = l.getLexema();aumentarAnimacionUsada("Linea");
 figura ::= CUADRADO:f PAREN_APERTURA param_s PAREN_CIERRE  
          | CIRCULO:f PAREN_APERTURA param_c PAREN_CIERRE   
          | RECTANGULO:f PAREN_APERTURA param_r PAREN_CIERRE
-         | LINEA:f PAREN_APERTURA param_l PAREN_CIERRE            {:usoLinea.aumentar();:}
+         | LINEA:f PAREN_APERTURA param_l PAREN_CIERRE            {:aumentarUsoLinea();:}
          | POLIGONO:f PAREN_APERTURA param_p PAREN_CIERRE  
          ;
 
