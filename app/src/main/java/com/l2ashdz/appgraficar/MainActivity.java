@@ -50,9 +50,12 @@ public class MainActivity extends AppCompatActivity {
         Resultados results = new Resultados(lexer, parser);
 
         if(results.getErrores().isEmpty()){
-            Intent intent = new Intent(this, GraficasActivity.class);
+            /*Intent intent = new Intent(this, GraficasActivity.class);
             intent.putExtra("resultados", results);
-            startActivity(intent);
+            startActivity(intent);*/
+            results.getOcurrencias().forEach(o -> {
+                System.out.println(o.getOperador() + " | " + o.getLinea() + " | " + o.getColumna() + " | " + o.getOcurrencia());
+            });
         } else {
             //reporte de errores
             Toast.makeText(getApplicationContext(), "Hay errores perro", Toast.LENGTH_SHORT);

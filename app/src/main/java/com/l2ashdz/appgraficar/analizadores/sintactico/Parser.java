@@ -10,9 +10,11 @@ import com.l2ashdz.appgraficar.model.animaciones.Animacion;
 import com.l2ashdz.appgraficar.model.errores.ErrorAnalisis;
 import com.l2ashdz.appgraficar.model.errores.TipoError;
 import com.l2ashdz.appgraficar.model.figuras.*;
-import java_cup.runtime.Symbol;
+import com.l2ashdz.appgraficar.model.otros.AnimacionUsada;
+import com.l2ashdz.appgraficar.model.otros.FiguraUsada;
 import java.util.ArrayList;
 import java.util.List;
+import java_cup.runtime.Symbol;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -240,6 +242,8 @@ public class Parser extends java_cup.runtime.lr_parser {
        private List<ErrorAnalisis> errores = new ArrayList();
        private List<Figura> figurasAGraficar = new ArrayList();
        private List<Animacion> animaciones = new ArrayList();
+       private List<AnimacionUsada> usoAnimaciones = new ArrayList();
+       private FiguraUsada usoLinea = new FiguraUsada("Linea");
 
        public List<ErrorAnalisis> getErrores(){
               return this.errores;
@@ -252,6 +256,14 @@ public class Parser extends java_cup.runtime.lr_parser {
        public List<Animacion> getAnimaciones(){
               return this.animaciones;
        }
+
+       public List<AnimacionUsada> getUsoAnimaciones(){
+              return this.usoAnimaciones;
+       }
+
+       public FiguraUsada getUsoLinea(){
+              return this.usoLinea;
+       }
        
        public void syntax_error(Symbol s){
               Token t = (Token) s.value;
@@ -260,6 +272,25 @@ public class Parser extends java_cup.runtime.lr_parser {
               //report_error("Error sintactico en tonken: "+t.getName()+", en la linea: "+t.getLinea()+" y columna: "+t.getColumna()+", intentado recuperarse", cur_token);
               errores.add(new ErrorAnalisis(t.getName(), t.getLinea(), t.getColumna(), TipoError.SINTACTICO, descripcion.toString()));
        }
+
+       private void aumentarAnimacionUsada(String animacion){
+              if(usoAnimaciones.isEmpty()){
+                     usoAnimaciones.add(new AnimacionUsada(animacion));
+              } else {
+                  boolean add = true;
+                  
+                  for (AnimacionUsada a : usoAnimaciones) {
+                      if (a.getNombre().equals(animacion)) {
+                          a.aumentar();
+                          add = false;
+                      }
+                  }
+                  
+                  if (add) {
+                     usoAnimaciones.add(new AnimacionUsada(animacion));
+                  }
+              }
+          }
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
@@ -372,7 +403,7 @@ class CUP$Parser$actions {
 		int lleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Token l = (Token)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		RESULT = l.getName();
+		RESULT = l.getName();aumentarAnimacionUsada("Linea");
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("tipoA",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -384,7 +415,7 @@ class CUP$Parser$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		Token c = (Token)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
-		RESULT = c.getName();
+		RESULT = c.getName();aumentarAnimacionUsada("Curva");
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("tipoA",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -432,7 +463,7 @@ class CUP$Parser$actions {
 		int fleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).left;
 		int fright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).right;
 		Token f = (Token)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
-		RESULT = f.getName();
+		RESULT = f.getName();usoLinea.aumentar();
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("figura",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

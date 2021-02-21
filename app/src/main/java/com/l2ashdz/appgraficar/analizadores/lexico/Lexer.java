@@ -8,12 +8,15 @@ import com.l2ashdz.appgraficar.analizadores.sintactico.sym;
 import com.l2ashdz.appgraficar.model.Token;
 import com.l2ashdz.appgraficar.model.errores.ErrorAnalisis;
 import com.l2ashdz.appgraficar.model.errores.TipoError;
-import java_cup.runtime.*;
-import java.util.ArrayList;
-import java.util.List;
-import static com.l2ashdz.appgraficar.analizadores.sintactico.sym.*;
 import com.l2ashdz.appgraficar.model.otros.ColorUsado;
 import com.l2ashdz.appgraficar.model.otros.FiguraUsada;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import java_cup.runtime.Symbol;
+
+import static com.l2ashdz.appgraficar.analizadores.sintactico.sym.*;
 
 // See https://github.com/jflex-de/jflex/issues/222
 @SuppressWarnings("FallThrough")
@@ -338,6 +341,7 @@ public class Lexer implements java_cup.runtime.Scanner {
     private List<ErrorAnalisis> errores = new ArrayList();
     private List<ColorUsado> usoColores = new ArrayList();
     private List<FiguraUsada> usoFiguras = new ArrayList();
+    private List<String> operadoresYOperandos = new ArrayList();
 
     public List<ErrorAnalisis> getErrores(){
         return this.errores;
@@ -349,6 +353,10 @@ public class Lexer implements java_cup.runtime.Scanner {
 
     public List<FiguraUsada> getUsoFiguras(){
         return this.usoFiguras;
+    }
+
+    public List<String> getOperadoresYOperandos(){
+        return this.operadoresYOperandos;
     }
   
     private Symbol symbol(String name, int type){
@@ -820,22 +828,26 @@ public class Lexer implements java_cup.runtime.Scanner {
             // fall through
           case 30: break;
           case 3:
-            { return symbol("PAREN_ABRE", PA);
+            { operadoresYOperandos.add(yytext());
+                                        return symbol("PAREN_ABRE", PA);
             }
             // fall through
           case 31: break;
           case 4:
-            { return symbol("PAREN_CIERRE", PC);
+            { operadoresYOperandos.add(yytext());
+                                        return symbol("PAREN_CIERRE", PC);
             }
             // fall through
           case 32: break;
           case 5:
-            { return symbol("MULTIPLICACION", MULT);
+            { operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
+                                        return symbol("MULTIPLICACION", MULT);
             }
             // fall through
           case 33: break;
           case 6:
-            { return symbol("SUMA", SUMA);
+            { operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
+                                        return symbol("SUMA", SUMA);
             }
             // fall through
           case 34: break;
@@ -845,17 +857,20 @@ public class Lexer implements java_cup.runtime.Scanner {
             // fall through
           case 35: break;
           case 8:
-            { return symbol("RESTA", RESTA);
+            { operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
+                                        return symbol("RESTA", RESTA);
             }
             // fall through
           case 36: break;
           case 9:
-            { return symbol("DIVISION", DIV);
+            { operadoresYOperandos.add(yytext()+","+(yyline+1)+","+(yycolumn+1));
+                                        return symbol("DIVISION", DIV);
             }
             // fall through
           case 37: break;
           case 10:
-            { return symbol("NUMERO", NUMERO, yytext());
+            { operadoresYOperandos.add(yytext());
+                                        return symbol("NUMERO", NUMERO, yytext());
             }
             // fall through
           case 38: break;

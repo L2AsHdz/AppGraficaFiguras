@@ -3,11 +3,11 @@ package com.l2ashdz.appgraficar.model.otros;
 public class Ocurrencia {
 
     private String operador;
-    private int linea;
-    private int columna;
+    private String linea;
+    private String columna;
     private String ocurrencia;
 
-    public Ocurrencia(String operador, int linea, int columna, String ocurrencia) {
+    public Ocurrencia(String operador, String linea, String columna, String ocurrencia) {
         this.operador = operador;
         this.linea = linea;
         this.columna = columna;
@@ -25,19 +25,19 @@ public class Ocurrencia {
         this.operador = operador;
     }
 
-    public int getLinea() {
+    public String getLinea() {
         return linea;
     }
 
-    public void setLinea(int linea) {
+    public void setLinea(String linea) {
         this.linea = linea;
     }
 
-    public int getColumna() {
+    public String getColumna() {
         return columna;
     }
 
-    public void setColumna(int columna) {
+    public void setColumna(String columna) {
         this.columna = columna;
     }
 
