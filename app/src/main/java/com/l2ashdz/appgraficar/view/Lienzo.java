@@ -4,11 +4,15 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.view.View;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 import static java.lang.Math.pow;
+import static java.lang.Math.sin;
+import static java.lang.Math.cos;
+import static java.lang.Math.PI;
 
 import com.l2ashdz.appgraficar.model.animaciones.Animacion;
 import com.l2ashdz.appgraficar.model.figuras.Circulo;
@@ -24,6 +28,7 @@ public class Lienzo extends View {
 
     private List<Figura> figurasAGraficar;
     private List<Animacion> animaciones;
+    private Path path;
     private boolean executeAnimations;
     private float xtemp = -1;
     private float ytemp = -1;
@@ -62,6 +67,7 @@ public class Lienzo extends View {
                 canvas.drawLine(l.getPosx(), l.getPosy(), l.getPosx2(), l.getPosy2(), pincel);
             } else if (f instanceof Poligono) {
                 Poligono p = (Poligono) f;
+                drawPolygon(canvas, p.getPosx(), p.getPosy(), p.getAlto(), p.getAncho(), p.getCantLados(), pincel);
             }
         });
 
@@ -89,6 +95,7 @@ public class Lienzo extends View {
                 canvas.drawLine(xtemp, ytemp, xtemp + (l.getPosx2() - l.getPosx()), ytemp + (l.getPosy2() - l.getPosy()), pincel);
             } else if (f instanceof Poligono) {
                 Poligono p = (Poligono) f;
+                drawPolygon(canvas, xtemp, ytemp, p.getAlto(), p.getAncho(), p.getCantLados(), pincel);
             }
 
             if (animaciones.get(index).getTipoAnimacion().equalsIgnoreCase("linea")) {
@@ -230,5 +237,33 @@ public class Lienzo extends View {
         } else {
             //No hacer nada
         }
+    }
+
+    private void drawPolygon(Canvas canvas, float x, float y, float alto, float ancho, int lados, Paint paint) {
+        this.path = new Path();
+        float radioH = alto / 2;
+        float radioW = ancho / 2;
+        float angulo = 360 / lados;
+
+        for (int i = 0; i < lados; i++) {
+            if (i == 0) {
+                path.moveTo((float) (radioW * coseno(angulo * i)), (float) (radioH * seno(angulo * i)));
+            } else {
+                path.lineTo((float) (radioW * coseno(angulo * i)), (float) (radioH * seno(angulo * i)));
+            }
+        }
+        path.close();
+        canvas.save();
+        canvas.translate(x, y);
+        canvas.drawPath(path, paint);
+        canvas.restore();
+    }
+
+    float seno(float num) {
+        return (float) sin(num * PI / 180);
+    }
+
+    float coseno(float num) {
+        return (float) cos(num * PI / 180);
     }
 }
