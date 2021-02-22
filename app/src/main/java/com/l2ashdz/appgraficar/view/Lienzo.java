@@ -109,7 +109,7 @@ public class Lienzo extends View {
             }
 
 
-            if (abs(xtemp-x2) > 2 | abs(ytemp-y2) > 2) {
+            if (abs(xtemp-x2) > 5 | abs(ytemp-y2) > 5) {
                 invalidate();
             } else {
                 f.setPosx(x2);
@@ -183,19 +183,20 @@ public class Lienzo extends View {
     private void calcularPosicionesLinea(float x, float y, float x2, float y2) {
         float distX = x2 - x;
         float distY = y2 - y;
+        int NO_PIXELS = 5;
 
         if (distX == 0 && distY != 0) {
-            ytemp = (distY < 0) ? ytemp - 1 : ytemp + 1;
+            ytemp = (distY < 0) ? ytemp - NO_PIXELS : ytemp + NO_PIXELS;
         } else if (distX != 0 && distY == 0) {
-            xtemp = (distX < 0) ? xtemp - 1 : xtemp + 1;
+            xtemp = (distX < 0) ? xtemp - NO_PIXELS : xtemp + NO_PIXELS;
         } else if (distX != 0 && distY != 0) {
             calcularPendiente(x, y, x2, y2);
             calcularB(x, y);
             if (abs(distX) > abs(distY)) {
-                xtemp = (distX < 0) ? xtemp - 1 : xtemp + 1;
+                xtemp = (distX < 0) ? xtemp - NO_PIXELS : xtemp + NO_PIXELS;
                 ytemp = calcularY(xtemp);
             } else {
-                ytemp = (distY < 0) ? ytemp - 1 : ytemp + 1;
+                ytemp = (distY < 0) ? ytemp - NO_PIXELS : ytemp + NO_PIXELS;
                 xtemp = calcularX(ytemp);
             }
         }
