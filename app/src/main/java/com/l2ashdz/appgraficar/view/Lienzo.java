@@ -12,6 +12,7 @@ import static java.lang.Math.sqrt;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.cos;
+import static java.lang.Math.atan2;
 import static java.lang.Math.PI;
 
 import com.l2ashdz.appgraficar.model.animaciones.Animacion;
@@ -36,7 +37,8 @@ public class Lienzo extends View {
     private float b;
     private float h;
     private float k;
-    private float radio;
+    private float radio = -1;
+    private float theta = -1;
     private int index = 0;
 
     public Lienzo(Context context, List<Figura> figurasAGrraficar, List<Animacion> animaciones, boolean executeAnimations) {
@@ -120,6 +122,8 @@ public class Lienzo extends View {
 
                 xtemp = -1;
                 ytemp = -1;
+                radio = -1;
+                theta = -1;
                 if (index < animaciones.size() - 1) {
                     index++;
                     invalidate();
@@ -205,38 +209,29 @@ public class Lienzo extends View {
         k = (y + y2) / 2;
     }
 
-    private void calcularRadio(float x2, float y2) {
-        radio = (float) sqrt(pow((x2 - h), 2) + pow((y2 - k), 2));
+    private void calcularRadio(float x, float y, float x2, float y2) {
+        radio = (float) sqrt(pow((x2 - x), 2) + pow((y2 - y), 2)) / 2;
     }
 
-    private float calcularYCurva(float x) {
-        return (float) (sqrt(pow(radio, 2) - pow((x - h), 2)) + k);
-    }
-
-    private float calcularXCurva(float y) {
-        return (float) (sqrt(pow(radio, 2) - pow((y - k), 2)) + h);
+    private void calcularAngulo(float x, float y) {
+        theta = (float) ((atan2(x, y)) * (180 / PI));
     }
 
     private void calcularPosicionesCurva(float x, float y, float x2, float y2) {
-        float distX = x2 - x;
-        float distY = y2 - y;
+        if (radio == -1) {
+            calcularRadio(x, y, x2, y2);
+        }
+        if (theta == -1) {
+            calcularAngulo(x, y);
+        }
 
         calcularH(x, x2);
         calcularK(y, y2);
-        calcularRadio(x2, y2);
 
-        if (distX == 0 && distY != 0) {
-            ytemp = (distY < 0) ? ytemp - 1 : ytemp + 1;
-            xtemp = calcularXCurva(ytemp);
-        } else if (distX != 0 && distY == 0) {
-            xtemp = (distX < 0) ? xtemp - 1 : xtemp + 1;
-            ytemp = calcularYCurva(xtemp);
-        } else if (distX != 0 && distY != 0) {
-            xtemp = (distX < 0) ? xtemp - 1 : xtemp + 1;
-            ytemp = calcularYCurva(xtemp);
-        } else {
-            //No hacer nada
-        }
+        theta++;
+        xtemp = h + (float) (radio * coseno(theta));
+        ytemp = k + (float) (radio * seno(theta));
+        System.out.println("\n\n\n" + xtemp + " - " + ytemp + " - " + theta + " | " + radio + " - "+h+" - "+k+"\n\n\n");
     }
 
     private void drawPolygon(Canvas canvas, float x, float y, float alto, float ancho, int lados, Paint paint) {
@@ -259,11 +254,11 @@ public class Lienzo extends View {
         canvas.restore();
     }
 
-    float seno(float num) {
-        return (float) sin(num * PI / 180);
+    private float seno(float angulo) {
+        return (float) sin(angulo * PI / 180);
     }
 
-    float coseno(float num) {
-        return (float) cos(num * PI / 180);
+    private float coseno(float angulo) {
+        return (float) cos(angulo * PI / 180);
     }
 }
