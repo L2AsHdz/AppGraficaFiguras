@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.l2ashdz.appgraficar.model.Resultados;
 import com.l2ashdz.appgraficar.model.figuras.Figura;
@@ -15,7 +16,7 @@ import com.l2ashdz.appgraficar.view.Lienzo;
 
 public class GraficasActivity extends AppCompatActivity {
 
-    ConstraintLayout cLayout;
+    LinearLayout cLayout;
     Resultados results;
     Lienzo lienzo;
     Button btnReportes;
@@ -30,7 +31,7 @@ public class GraficasActivity extends AppCompatActivity {
 
         btnAnimar = findViewById(R.id.btn_Animar);
         btnReportes = findViewById(R.id.verReportes);
-        cLayout = findViewById(R.id.cLayout);
+        cLayout = findViewById(R.id.layout);
         lienzo = new Lienzo(this, results.getFiguras(), results.getAnimaciones(), false);
         cLayout.addView(lienzo);
         if (results.getAnimaciones().isEmpty()){

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             //reporte de errores
-            Toast.makeText(this, "Hay errores perro", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Se encontraron errores", Toast.LENGTH_SHORT).show();
             results.getErrores().forEach(e -> System.out.println(e.getLexema()));
             Intent intent = new Intent(this, ReportesActivity.class);
             intent.putExtra("resultados", results);
