@@ -1,0 +1,200 @@
+package com.l2ashdz.appgraficar.analizadores.sintactico;
+
+import com.l2ashdz.appgraficar.model.Token;
+import com.l2ashdz.appgraficar.model.animaciones.Animacion;
+import com.l2ashdz.appgraficar.model.errores.ErrorAnalisis;
+import com.l2ashdz.appgraficar.model.errores.TipoError;
+import com.l2ashdz.appgraficar.model.figuras.*;
+import com.l2ashdz.appgraficar.model.otros.AnimacionUsada;
+import com.l2ashdz.appgraficar.model.otros.FiguraUsada;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import java_cup.runtime.Symbol;
+
+parser code {:
+
+       private List<ErrorAnalisis> errores = new ArrayList();
+       private List<Figura> figurasAGraficar = new ArrayList();
+       private List<Animacion> animaciones = new ArrayList();
+       private List<AnimacionUsada> usoAnimaciones = new ArrayList();
+       private FiguraUsada usoLinea;
+
+       public List<ErrorAnalisis> getErrores(){
+              return this.errores;
+       }
+
+       public List<Figura> getFiguras(){
+              return this.figurasAGraficar;
+       }
+
+       public List<Animacion> getAnimaciones(){
+              return this.animaciones;
+       }
+
+       public List<AnimacionUsada> getUsoAnimaciones(){
+              return this.usoAnimaciones;
+       }
+
+       public FiguraUsada getUsoLinea(){
+              return this.usoLinea;
+       }
+       
+       public void syntax_error(Symbol s){
+              Token t = (Token) s.value;
+              StringBuilder descripcion = new StringBuilder("Se esperaba: ");
+              expected_token_ids().forEach(x -> descripcion.append(symbl_name_from_id(x)).append(", "));
+              //report_error("Error sintactico en tonken: "+t.getName()+", en la linea: "+t.getLinea()+" y columna: "+t.getColumna()+", intentado recuperarse", cur_token);
+              errores.add(new ErrorAnalisis(t.getLexema(), t.getLinea(), t.getColumna(), TipoError.SINTACTICO, descripcion.toString()));
+       }
+
+       private void aumentarAnimacionUsada(String animacion){
+              if(usoAnimaciones.isEmpty()){
+                     usoAnimaciones.add(new AnimacionUsada(animacion));
+              } else {
+                  boolean add = true;
+                  
+                  for (AnimacionUsada a : usoAnimaciones) {
+                      if (a.getNombre().equals(animacion)) {
+                          a.aumentar();
+                          add = false;
+                      }
+                  }
+                  
+                  if (add) {
+                     usoAnimaciones.add(new AnimacionUsada(animacion));
+                  }
+              }
+       }
+
+       private void aumentarUsoLinea(){
+              if (usoLinea == null){
+                     usoLinea = new FiguraUsada("Linea");
+              } else {
+                     usoLinea.aumentar();
+              }
+       }
+:}
+
+/*Terminales y no terminales*/
+terminal Token      GRAFICAR, ANIMAR, OBJETO, ANTERIOR, CURVA;
+terminal Token      CIRCULO, CUADRADO, RECTANGULO, LINEA, POLIGONO;
+terminal Token      NEGRO, AZUL, ROJO, VERDE, AMARILLO, NARANJA, MORADO, CAFE;
+terminal Token      SUMA, RESTA, MULTIPLICACION, DIVISION, PAREN_APERTURA, PAREN_CIERRE, COMA;
+terminal Token      NUMERO;
+
+non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color, animate, tipoA, othersAnim, ignoreAnim;
+non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados, expr;
+
+//Precedencias
+precedence left SUMA, RESTA;
+precedence left MULTIPLICACION, DIVISION;
+
+/*Gramatica*/
+
+nose ::= graph
+       | graph nose
+       ;
+
+graph ::= GRAFICAR figura
+        | GRAFICAR figura animate
+        | GRAFICAR figura animate othersAnim
+
+        | error                        {:System.out.println("Error, estructura incorrecta");:}
+        ;
+
+othersAnim ::= ignoreAnim
+             | ignoreAnim othersAnim;
+
+ignoreAnim ::= ANIMAR OBJETO ANTERIOR PAREN_APERTURA posx COMA posy COMA tipoA PAREN_CIERRE;
+
+animate ::= ANIMAR OBJETO ANTERIOR PAREN_APERTURA posx:x COMA posy:y COMA tipoA:ta PAREN_CIERRE 
+           {:
+              animaciones.add(new Animacion(figurasAGraficar.get(figurasAGraficar.size()-1), x, y, ta.toString()));
+           :}
+           ;
+
+tipoA ::= LINEA:l      {:RESULT = l.getLexema();aumentarAnimacionUsada("Linea");:}
+        | CURVA:c      {:RESULT = c.getLexema();aumentarAnimacionUsada("Curva");:}
+        ;
+
+figura ::= CUADRADO:f PAREN_APERTURA param_s PAREN_CIERRE  
+         | CIRCULO:f PAREN_APERTURA param_c PAREN_CIERRE   
+         | RECTANGULO:f PAREN_APERTURA param_r PAREN_CIERRE
+         | LINEA:f PAREN_APERTURA param_l PAREN_CIERRE            {:aumentarUsoLinea();:}
+         | POLIGONO:f PAREN_APERTURA param_p PAREN_CIERRE  
+         ;
+
+param_s ::= posx:x COMA posy:y COMA lado:l COMA color:c
+            {:
+                figurasAGraficar.add(new Cuadrado(l, x, y, c.toString()));
+            :}
+            ;
+
+param_c ::= posx:x COMA posy:y COMA radio:r COMA color:c
+            {:
+                figurasAGraficar.add(new Circulo(r, x, y, c.toString()));
+            :}
+            ;
+
+param_r ::= posx:x COMA posy:y COMA alto:h COMA ancho:w COMA color:c
+            {:
+                figurasAGraficar.add(new Rectangulo(h, w, x, y, c.toString()));
+            :}
+            ;
+
+param_l ::= posx:x COMA posy:y COMA posx:x2 COMA posy:y2 COMA color:c
+            {:
+                figurasAGraficar.add(new Linea(x2, y2, x, y, c.toString()));
+            :}
+            ;
+
+param_p ::= posx:x COMA posy:y COMA alto:h COMA ancho:w COMA cant_lados:cl COMA color:c
+            {:
+                figurasAGraficar.add(new Poligono(h, w, cl.intValue(), x, y, c.toString()));
+            :}
+            ;
+
+posx ::= expr:n        {:RESULT = n;:}
+       ;
+
+posy ::= expr:n        {:RESULT = n;:}
+       ;
+
+lado ::= expr:n        {:RESULT = n;:}
+       ;
+
+radio ::= expr:n        {:RESULT = n;:}
+        ;
+
+alto ::= expr:n        {:RESULT = n;:}
+       ;
+
+ancho ::= expr:n        {:RESULT = n;:}
+       ;
+
+cant_lados ::= expr:n        {:RESULT = n;:}
+             ;
+       
+color ::= NEGRO:c      {:RESULT = c.getLexema();:}
+        | AZUL:c       {:RESULT = c.getLexema();:}
+        | ROJO:c       {:RESULT = c.getLexema();:}
+        | VERDE:c      {:RESULT = c.getLexema();:}
+        | AMARILLO:c   {:RESULT = c.getLexema();:}
+        | NARANJA:c    {:RESULT = c.getLexema();:}
+        | MORADO:c     {:RESULT = c.getLexema();:}
+        | CAFE:c       {:RESULT = c.getLexema();:}
+        ;
+
+expr ::= expr:e1 SUMA expr:e2                                          {:RESULT = e1 + e2;:}
+       | expr:e1 RESTA expr:e2                                         {:RESULT = e1 - e2;:}
+       | expr:e1 MULTIPLICACION expr:e2                                {:RESULT = e1 * e2;:}
+       | expr:e1 DIVISION expr:e2                                      {:RESULT = e1 / e2;:}
+       | PAREN_APERTURA expr:e PAREN_CIERRE                            {:RESULT = e;:}
+       | PAREN_APERTURA expr:e1 PAREN_CIERRE SUMA expr:e2              {:RESULT = e1 + e2;:} 
+       | PAREN_APERTURA expr:e1 PAREN_CIERRE RESTA expr:e2             {:RESULT = e1 - e2;:} 
+       | PAREN_APERTURA expr:e1 PAREN_CIERRE MULTIPLICACION expr:e2    {:RESULT = e1 * e2;:} 
+       | PAREN_APERTURA expr:e1 PAREN_CIERRE DIVISION expr:e2          {:RESULT = e1 / e2;:} 
+| NUMERO:n                                                             {:RESULT = n.getNumero();:}
+       ;
