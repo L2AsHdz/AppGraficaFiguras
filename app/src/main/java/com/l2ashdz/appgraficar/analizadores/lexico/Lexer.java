@@ -809,7 +809,7 @@ public class Lexer implements java_cup.runtime.Scanner {
       if (zzInput == YYEOF && zzStartRead == zzCurrentPos) {
         zzAtEOF = true;
             zzDoEOF();
-          {     return new Symbol(EOF, new Token(-1,-1, "Fin de linea"));
+          {     return new Symbol(EOF, new Token(yyline, yycolumn, "Fin de linea"));
  }
       }
       else {

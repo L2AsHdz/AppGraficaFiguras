@@ -94,7 +94,7 @@ import static com.l2ashdz.appgraficar.analizadores.sintactico.sym.*;
 %}
 
 %eofval{
-    return new Symbol(EOF, new Token(-1,-1, "Fin de linea"));
+    return new Symbol(EOF, new Token(yyline, yycolumn, "Fin de linea"));
 %eofval}
 
 SALTO = \n|\r|\r\n

@@ -93,7 +93,7 @@ terminal Token      NEGRO, AZUL, ROJO, VERDE, AMARILLO, NARANJA, MORADO, CAFE;
 terminal Token      SUMA, RESTA, MULTIPLICACION, DIVISION, PAREN_APERTURA, PAREN_CIERRE, COMA;
 terminal Token      NUMERO;
 
-non terminal        nose, graph, figura, param_s, param_c, param_r, param_l, param_p, color, animate, tipoA, othersAnim, ignoreAnim;
+non terminal        inicio, graph, figura, param_s, param_c, param_r, param_l, param_p, color, animate, tipoA, othersAnim, ignoreAnim;
 non terminal Float  posx, posy, lado, radio, alto, ancho, cant_lados, expr;
 
 //Precedencias
@@ -102,7 +102,7 @@ precedence left MULTIPLICACION, DIVISION;
 
 /*Gramatica*/
 
-nose ::= graph
+inicio ::= graph
        | graph nose
        ;
 
