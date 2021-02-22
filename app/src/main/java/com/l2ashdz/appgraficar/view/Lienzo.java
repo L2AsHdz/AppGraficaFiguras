@@ -12,7 +12,7 @@ import static java.lang.Math.sqrt;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.cos;
-import static java.lang.Math.atan2;
+import static java.lang.Math.atan;
 import static java.lang.Math.PI;
 
 import com.l2ashdz.appgraficar.model.animaciones.Animacion;
@@ -214,10 +214,26 @@ public class Lienzo extends View {
     }
 
     private void calcularAngulo(float x, float y) {
-        theta = (float) ((atan2(x, y)) * (180 / PI));
+        x = x - h;
+        y = y - k;
+
+        if (x > 0 && y >= 0) {
+            theta = arctan(x, y);
+        } else if (x == 0 && y > 0) {
+            theta = 90;
+        } else if (x < 0) {
+            theta = arctan(x, y) + 180;
+        } else if (x == 0 && y < 0) {
+            theta = 270;
+        } else if (x > 0 && y < 0) {
+            theta = arctan(x, y) + 360;
+        }
     }
 
     private void calcularPosicionesCurva(float x, float y, float x2, float y2) {
+        calcularH(x, x2);
+        calcularK(y, y2);
+
         if (radio == -1) {
             calcularRadio(x, y, x2, y2);
         }
@@ -225,13 +241,10 @@ public class Lienzo extends View {
             calcularAngulo(x, y);
         }
 
-        calcularH(x, x2);
-        calcularK(y, y2);
-
         theta++;
-        xtemp = h + (float) (radio * coseno(theta));
-        ytemp = k + (float) (radio * seno(theta));
-        System.out.println("\n\n\n" + xtemp + " - " + ytemp + " - " + theta + " | " + radio + " - "+h+" - "+k+"\n\n\n");
+        xtemp = h + (radio * coseno(theta));
+        ytemp = k + (radio * seno(theta));
+        System.out.println("xtemp: " + xtemp + "ytemp: " +ytemp);
     }
 
     private void drawPolygon(Canvas canvas, float x, float y, float alto, float ancho, int lados, Paint paint) {
@@ -260,5 +273,9 @@ public class Lienzo extends View {
 
     private float coseno(float angulo) {
         return (float) cos(angulo * PI / 180);
+    }
+
+    private float arctan(float x, float y) {
+        return (float) (atan(y / x) * (180 / PI));
     }
 }
