@@ -54,6 +54,8 @@ public class ReportesActivity extends AppCompatActivity {
         reportTable.crearTabla();
     }
 
+    //Dependiendo del reporte que se esta visualizando en pantalla, cambia la accion y el texto
+    //del boton
     public void siguienteReporte(View view) {
         String titulo = title.getText().toString();
 

@@ -51,6 +51,7 @@ public class Lienzo extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        //Se recorre la lista graficando las figuras obtenidas del texto de entrada
         figurasAGraficar.forEach(f -> {
             Paint pincel = setPincel(f.getColor());
 
@@ -72,6 +73,7 @@ public class Lienzo extends View {
             }
         });
 
+        //Si se detectaron animaciones las ejecuta una seguida de otra
         if (executeAnimations & !animaciones.isEmpty()) {
             Figura f = animaciones.get(index).getFigura();
             Paint pincel = setPincel(f.getColor());
@@ -79,10 +81,12 @@ public class Lienzo extends View {
             float x2 = animaciones.get(index).getPosx();
             float y2 = animaciones.get(index).getPosy();
 
+            //Se establecen las coordenadas temporales
             if (xtemp == -1 & ytemp == -1) {
                 xtemp = f.getPosx();
                 ytemp = f.getPosy();
             }
+            //Se remueve la figura a animar de las figuras a graficar
             figurasAGraficar.remove(f);
 
             if (f instanceof Circulo) {
@@ -109,6 +113,9 @@ public class Lienzo extends View {
             }
 
 
+            //Redibuja mientras la diferencia entre la coordenada final y la coordenada temporal sea
+            //mayor a 5, de lo contrario agrega la figura con su nueva posicion a la lista de
+            //figuras a graficar
             if (abs(xtemp-x2) > 5 | abs(ytemp-y2) > 5) {
                 invalidate();
             } else {
@@ -134,6 +141,7 @@ public class Lienzo extends View {
         }
     }
 
+    //Establece el pincel dependiendo del color indicado
     private Paint setPincel(String color) {
         switch (color) {
             case "rojo":
@@ -164,22 +172,27 @@ public class Lienzo extends View {
         return pincel;
     }
 
+    //Calcula la pendiente de la recta, se utiliza para la animacion tipo linea
     private void calcularPendiente(float x1, float y1, float x2, float y2) {
         pendiente = (y2 - y1) / (x2 - x1);
     }
 
+    //calcula b constante de la ecuacion punto pendiente
     private void calcularB(float x1, float y1) {
         b = y1 - (pendiente * x1);
     }
 
+    //Calcula la posicion en Y dependiendo de la posicion actual de X
     private float calcularY(float x) {
         return pendiente * x + b;
     }
 
+    //Calcula la posicion en X dependiendo de la posicion actual de Y
     private float calcularX(float y) {
         return (y - b) / pendiente;
     }
 
+    //Calcula las posiciones temporales para la acnimacion de tipo linea
     private void calcularPosicionesLinea(float x, float y, float x2, float y2) {
         float distX = x2 - x;
         float distY = y2 - y;
@@ -202,18 +215,22 @@ public class Lienzo extends View {
         }
     }
 
+    //Calcula la coordenada x del centro de la circunferencia
     private void calcularH(float x, float x2) {
         h = (x + x2) / 2;
     }
 
+    //Calcula la coordenada y del centro de la circunferencia
     private void calcularK(float y, float y2) {
         k = (y + y2) / 2;
     }
 
+    //Calcula el radio de la circunferencia entre los puntos indicados
     private void calcularRadio(float x, float y, float x2, float y2) {
         radio = (float) sqrt(pow((x2 - x), 2) + pow((y2 - y), 2)) / 2;
     }
 
+    //Calcula el angulo de inicio para la animacion tipo curva
     private void calcularAngulo(float x, float y) {
         x = x - h;
         y = y - k;
@@ -231,6 +248,7 @@ public class Lienzo extends View {
         }
     }
 
+    //Calcula las posiciones temporales para la animacion tipo curva
     private void calcularPosicionesCurva(float x, float y, float x2, float y2) {
         calcularH(x, x2);
         calcularK(y, y2);
@@ -247,6 +265,7 @@ public class Lienzo extends View {
         ytemp = k + (radio * seno(theta));
     }
 
+    //Dibuja un poligono de n lados con las caracteristicas especificadas
     private void drawPolygon(Canvas canvas, float x, float y, float alto, float ancho, int lados, Paint paint) {
         Path path = new Path();
         float radioH = alto / 2;

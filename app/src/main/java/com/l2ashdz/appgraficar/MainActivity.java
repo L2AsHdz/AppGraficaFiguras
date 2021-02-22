@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Si no hay errores inicia la actividad de graficas, si hay muestra el reporte de errores
     private void enviarDatos(Lexer lexer, Parser parser){
         Resultados results = new Resultados(lexer, parser);
 
