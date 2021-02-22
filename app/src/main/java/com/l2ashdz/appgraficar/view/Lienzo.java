@@ -27,10 +27,9 @@ import java.util.List;
 
 public class Lienzo extends View {
 
-    private List<Figura> figurasAGraficar;
-    private List<Animacion> animaciones;
-    private Path path;
-    private boolean executeAnimations;
+    private final List<Figura> figurasAGraficar;
+    private final List<Animacion> animaciones;
+    private final boolean executeAnimations;
     private float xtemp = -1;
     private float ytemp = -1;
     private float pendiente;
@@ -77,6 +76,9 @@ public class Lienzo extends View {
             Figura f = animaciones.get(index).getFigura();
             Paint pincel = setPincel(f.getColor());
 
+            float x2 = animaciones.get(index).getPosx();
+            float y2 = animaciones.get(index).getPosy();
+
             if (xtemp == -1 & ytemp == -1) {
                 xtemp = f.getPosx();
                 ytemp = f.getPosy();
@@ -101,17 +103,17 @@ public class Lienzo extends View {
             }
 
             if (animaciones.get(index).getTipoAnimacion().equalsIgnoreCase("linea")) {
-                calcularPosicionesLinea(f.getPosx(), f.getPosy(), animaciones.get(index).getPosx(), animaciones.get(index).getPosy());
+                calcularPosicionesLinea(f.getPosx(), f.getPosy(), x2, y2);
             } else {
-                calcularPosicionesCurva(f.getPosx(), f.getPosy(), animaciones.get(index).getPosx(), animaciones.get(index).getPosy());
+                calcularPosicionesCurva(f.getPosx(), f.getPosy(), x2, y2);
             }
 
 
-            if (xtemp != animaciones.get(index).getPosx() | ytemp != animaciones.get(index).getPosy()) {
+            if (abs(xtemp-x2) > 2 | abs(ytemp-y2) > 2) {
                 invalidate();
             } else {
-                f.setPosx(xtemp);
-                f.setPosy(ytemp);
+                f.setPosx(x2);
+                f.setPosy(y2);
 
                 if (f instanceof Linea) {
                     Linea l = (Linea) f;
@@ -196,8 +198,6 @@ public class Lienzo extends View {
                 ytemp = (distY < 0) ? ytemp - 1 : ytemp + 1;
                 xtemp = calcularX(ytemp);
             }
-        } else {
-            //No hacer nada
         }
     }
 
@@ -244,14 +244,13 @@ public class Lienzo extends View {
         theta++;
         xtemp = h + (radio * coseno(theta));
         ytemp = k + (radio * seno(theta));
-        System.out.println("xtemp: " + xtemp + "ytemp: " +ytemp);
     }
 
     private void drawPolygon(Canvas canvas, float x, float y, float alto, float ancho, int lados, Paint paint) {
-        this.path = new Path();
+        Path path = new Path();
         float radioH = alto / 2;
         float radioW = ancho / 2;
-        float angulo = 360 / lados;
+        int angulo = 360 / lados;
 
         for (int i = 0; i < lados; i++) {
             if (i == 0) {
